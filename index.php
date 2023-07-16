@@ -15,8 +15,8 @@
         <div class="header-div">
             <h1 class="header-title">Blew It</h1>
             <div class="header-links">
-                <h2 class="header-login"><a href="login.php">Login</a></h2>
-                <h2 class="header-register"><a href="register.php">Register</a></h2>
+                <button class="nav"><a href="login.php">Login</a></button>
+                <button class="nav"><a href="register.php">Register</a></button>
             </div>
         </div>
 
@@ -37,30 +37,46 @@
 
         <div class="posts-container">
             <div class="post-div">
-                <h2 class="post-user">Packersfan</h2>
-                <h4 class="post-sublewit"><i>Sports</i></h4>
-                <p class="post-content">The packers are a very cool team</p>
-                <!-- Use a get to go to post hrer -->
-                <p class="post-link"><a href="post.php">Click to see post</a></p>
-
-                <h3 class="post-upvotes">Upvotes</h3>
-                <h3 class="post-upvotes-total">0</h3>
-                <h3 class="post-downvotes">Downvotes</h3>
-                <h3 class="post-downvotes-total">0</h3>
+                <span class="topspan">
+                    <h2 class="post-user">Packersfan</h2>
+                    <p class="post-sublewit"><i>Sports</i></p>
+                </span>
+                <span class="topspan">
+                    <p class="post-content">The packers are a very cool team! <a href="post.php"> Click to see post</a></p>
+                    <!-- Use a get to go to post hrer -->
+                    
+                </span>
+                <span class="bottomspan">
+                    <p class="post-upvotes">Upvotes</p>
+                    <p class="post-upvotes-total">0</p> 
+                </span>
+                <span class="bottomspan">
+                    <p class="post-downvotes">Downvotes</p>
+                    <p class="post-downvotes-total">0</p>
+                </span>
+                
+                    
+                
             </div>
 
             <div class="post-div">
-                <h2 class="post-user">Packersfan</h2>
-                <h4 class="post-sublewit">Sports</h4>
-                <p class="post-content">The packers are a very cool team</p>
-                <!-- Use a get to go to post hrer -->
-                <p class="post-link"><a href="post.php">Click to see post</a></p>
-
-                <h3 class="post-upvotes">Upvotes</h3>
-                <h3 class="post-upvotes-total">0</h3>
-                <h3 class="post-downvotes">Downvotes</h3>
-                <h3 class="post-downvotes-total">0</h3>
-            </div>
+                <span class="topspan">
+                    <h2 class="post-user">Packersfan</h2>
+                    <p class="post-sublewit"><i>Sports</i></p>
+                </span>
+                <span class="topspan">
+                    <p class="post-content">The packers are a very cool team! <a href="post.php"> Click to see post</a></p>
+                    <!-- Use a get to go to post hrer -->
+                    
+                </span>
+                <span class="bottomspan">
+                    <p class="post-upvotes">Upvotes</p>
+                    <p class="post-upvotes-total">0</p> 
+                </span>
+                <span class="bottomspan">
+                    <p class="post-downvotes">Downvotes</p>
+                    <p class="post-downvotes-total">0</p>
+                </span>
         </div>
     </div>
 </body>
