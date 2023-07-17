@@ -1,3 +1,9 @@
+<?php
+require "realconfig.php";
+
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -26,9 +32,23 @@
                 <textarea name="upload-val" id="upload-text" cols="30" rows="5" placeholder="Text" required></textarea>
                 <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
                 <select name="sublewit-val" id="upload-sublewit" required>
-                    <option value="sports">Sports</option>
-                    <option value="news">News</option>
-                    <option value="other">Other</option>
+                    <?php
+
+                    try {
+                        $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
+                        $communitiesTable = $dbh->prepare("SELECT * FROM `bi_communities`;");
+                        $communitiesTable->execute();
+
+                        $communitiesOptions = $communitiesTable->fetchAll();
+                        foreach ($communitiesOptions as $communitiesOption) {
+                            echo "<option value='" . $communitiesOption['id'] . "'>" . $communitiesOption['name'] . "</option>";
+                        }
+                    } catch (PDOException $e) {
+                        echo "<p>Error: {$e->getMessage()}</p>";
+                    }
+
+                    ?>
+
                 </select>
 
                 <button class="upload-button" type="submit">Post</button>
@@ -36,47 +56,75 @@
         </div>
 
         <div class="posts-container">
-            <div class="post-div">
+            <!-- <div class="post-div">
                 <span class="topspan">
                     <h2 class="post-user">Packersfan</h2>
                     <p class="post-sublewit"><i>Sports</i></p>
                 </span>
                 <span class="topspan">
                     <p class="post-content">The packers are a very cool team! <a href="post.php"> Click to see post</a></p>
-                    <!-- Use a get to go to post hrer -->
                     
-                </span>
-                <span class="bottomspan">
-                    <p class="post-upvotes">Upvotes</p>
-                    <p class="post-upvotes-total">0</p> 
-                </span>
-                <span class="bottomspan">
-                    <p class="post-downvotes">Downvotes</p>
-                    <p class="post-downvotes-total">0</p>
-                </span>
-                
-                    
-                
-            </div>
 
-            <div class="post-div">
-                <span class="topspan">
-                    <h2 class="post-user">Packersfan</h2>
-                    <p class="post-sublewit"><i>Sports</i></p>
-                </span>
-                <span class="topspan">
-                    <p class="post-content">The packers are a very cool team! <a href="post.php"> Click to see post</a></p>
-                    <!-- Use a get to go to post hrer -->
-                    
                 </span>
                 <span class="bottomspan">
                     <p class="post-upvotes">Upvotes</p>
-                    <p class="post-upvotes-total">0</p> 
+                    <p class="post-upvotes-total">0</p>
                 </span>
                 <span class="bottomspan">
                     <p class="post-downvotes">Downvotes</p>
                     <p class="post-downvotes-total">0</p>
                 </span>
+
+
+
+            </div> -->
+
+            <?php
+            try {
+                $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
+                $postsTable = $dbh->prepare("SELECT * FROM `bi_posts` ORDER BY `creation_time` DESC;");
+
+                $postsTable->execute();
+
+                $posts = $postsTable->fetchAll();
+                foreach ($posts as $post) {
+                    $authorName = $dbh->prepare("SELECT `username` FROM `bi_users` WHERE :postAuthorId = `id`;");
+                    $authorName->bindValue(':postAuthorId', $post['author_id']);
+                    $authorName->execute();
+                    $author = $authorName->fetch();
+
+                    $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `id`;");
+                    $sublewItName->bindValue(':postSublewit', $post['community_id']);
+                    $sublewItName->execute();
+                    $sublewIt = $sublewItName->fetch();
+
+                    echo "<div class='post-div'>";
+                    echo "<span class='topspan'>";
+                    echo "<h2 class='post-user'>" . $author['username'] . "</h2>";
+                    echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
+                    echo "</span>";
+                    echo "<span class='topspan'>";
+                    //TODO: MAKE THE POST PAGE
+                    echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
+                    echo "</span>";
+
+                    //TODO: FIGURE OUT THE BI_INTERACTIONS
+                    echo "<span class='bottomspan'>
+                    <p class='post-upvotes'>Upvotes</p>
+                    <p class='post-upvotes-total'>0</p>
+                    </span>
+                    <span class='bottomspan'>
+                        <p class='post-downvotes'>Downvotes</p>
+                        <p class='post-downvotes-total'>0</p>
+                    </span>";
+
+                    echo "</div>";
+                }
+            } catch (PDOException $e) {
+                echo "<p>Error: {$e->getMessage()}</p>";
+            }
+            ?>
+
         </div>
     </div>
 </body>
