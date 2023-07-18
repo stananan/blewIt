@@ -1,5 +1,6 @@
 <?php
 require "realconfig.php";
+session_start();
 
 if (!isset(($_GET['id']))) {
     http_response_code(404);
@@ -48,8 +49,19 @@ try {
         <div class="header-div">
             <h1 class="header-title">Blew It</h1>
             <div class="header-links">
-                <button class="nav"><a href="login.php">Login</a></button>
-                <button class="nav"><a href="register.php">Register</a></button>
+                <?php
+                if (isset($_SESSION["user"])) {
+                    echo "<button class='nav'><a href='profile.php?id=" . $_SESSION['user']['id'] . "'>" . $_SESSION['user']['username'] . "</a></button>";
+                    echo "<button class='nav'><a href='logout.php'>Log out</a></button>";
+                    echo "<button class='nav'><a href='index.php'>Home</a></button>";
+                } else {
+                ?>
+                    <button class="nav"><a href="login.php">Login</a></button>
+                    <button class="nav"><a href="register.php">Register</a></button>
+                    <button class='nav'><a href='index.php'>Home</a></button>
+                <?php
+                }
+                ?>
             </div>
         </div>
         <div class="posts-container">
@@ -60,7 +72,7 @@ try {
 
             $post = $postsTable->fetch();
 
-            $authorName = $dbh->prepare("SELECT `username` FROM `bi_users` WHERE :postAuthorId = `id`;");
+            $authorName = $dbh->prepare("SELECT * FROM `bi_users` WHERE :postAuthorId = `id`;");
             $authorName->bindValue(':postAuthorId', $post['author_id']);
             $authorName->execute();
             $author = $authorName->fetch();
@@ -72,13 +84,14 @@ try {
 
             echo "<div class='post-div'>";
             echo "<span class='topspan'>";
-            echo "<h2 class='post-user'>" . $author['username'] . "</h2>";
+            echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
             echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
             echo "</span>";
             echo "<span class='topspan'>";
             //TODO: MAKE THE POST PAGE
             echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
             echo "</span>";
+            echo "<br>";
 
             //TODO: FIGURE OUT THE BI_INTERACTIONS
             echo "<span class='bottomspan'>
@@ -94,6 +107,7 @@ try {
             ?>
         </div>
     </div>
+
 </body>
 
 </html>

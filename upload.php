@@ -1,5 +1,6 @@
 <?php
 require "realconfig.php";
+session_start();
 
 try {
     $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
@@ -9,7 +10,7 @@ try {
 
     //TODO: replace this with the real author id later
 
-    $postsTable->bindValue(':authorId', 1);
+    $postsTable->bindValue(':authorId', $_SESSION["user"]["id"]);
     $postsTable->bindValue(':content', htmlspecialchars($_POST['upload-val']));
     $postsTable->bindValue(':communityId', htmlspecialchars($_POST['sublewit-val']));
     $postsTable->execute();

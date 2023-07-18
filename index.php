@@ -1,5 +1,6 @@
 <?php
 require "realconfig.php";
+session_start();
 
 ?>
 
@@ -19,41 +20,64 @@ require "realconfig.php";
 <body>
     <div class="container">
         <div class="header-div">
+
             <h1 class="header-title">Blew It</h1>
             <div class="header-links">
-                <button class="nav"><a href="login.php">Login</a></button>
-                <button class="nav"><a href="register.php">Register</a></button>
+
+                <?php
+                if (isset($_SESSION["user"])) {
+                    echo "<button class='nav'><a href='profile.php?id=" . $_SESSION['user']['id'] . "'>" . $_SESSION['user']['username'] . "</a></button>";
+                    echo "<button class='nav'><a href='logout.php'>Log out</a></button>";
+                    echo "<button class='nav'><a href='index.php'>Home</a></button>";
+                } else {
+                ?>
+                    <button class="nav"><a href="login.php">Login</a></button>
+
+                    <button class="nav"><a href="register.php">Register</a></button>
+
+                    <button class='nav'><a href='index.php'>Home</a></button>
+                <?php
+                }
+                ?>
             </div>
+
         </div>
 
-        <div class="upload-div">
-            <form action="upload.php" method="post" class="upload-form">
+        <?php
+        if (isset($_SESSION["user"])) {
+        ?>
+            <div class="upload-div">
+                <form action="upload.php" method="post" class="upload-form">
 
-                <textarea name="upload-val" id="upload-text" cols="30" rows="5" placeholder="Text" required></textarea>
-                <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
-                <select name="sublewit-val" id="upload-sublewit" required>
-                    <?php
+                    <textarea name="upload-val" id="upload-text" cols="30" rows="5" placeholder="Text" required></textarea>
+                    <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
+                    <select name="sublewit-val" id="upload-sublewit" required>
+                        <?php
 
-                    try {
-                        $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
-                        $communitiesTable = $dbh->prepare("SELECT * FROM `bi_communities`;");
-                        $communitiesTable->execute();
+                        try {
+                            $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
+                            $communitiesTable = $dbh->prepare("SELECT * FROM `bi_communities`;");
+                            $communitiesTable->execute();
 
-                        $communitiesOptions = $communitiesTable->fetchAll();
-                        foreach ($communitiesOptions as $communitiesOption) {
-                            echo "<option value='" . $communitiesOption['id'] . "'>" . $communitiesOption['name'] . "</option>";
+                            $communitiesOptions = $communitiesTable->fetchAll();
+                            foreach ($communitiesOptions as $communitiesOption) {
+                                echo "<option value='" . $communitiesOption['id'] . "'>" . $communitiesOption['name'] . "</option>";
+                            }
+                        } catch (PDOException $e) {
+                            echo "<p>Error: {$e->getMessage()}</p>";
                         }
-                    } catch (PDOException $e) {
-                        echo "<p>Error: {$e->getMessage()}</p>";
-                    }
 
-                    ?>
+                        ?>
 
-                </select>
+                    </select>
 
-                <button class="upload-button" type="submit">Post</button>
-            </form>
-        </div>
+                    <button class="upload-button" type="submit">Post</button>
+                </form>
+            </div>
+        <?php
+        }
+        ?>
+
 
         <div class="posts-container">
             <!-- <div class="post-div">
@@ -88,7 +112,7 @@ require "realconfig.php";
 
                 $posts = $postsTable->fetchAll();
                 foreach ($posts as $post) {
-                    $authorName = $dbh->prepare("SELECT `username` FROM `bi_users` WHERE :postAuthorId = `id`;");
+                    $authorName = $dbh->prepare("SELECT * FROM `bi_users` WHERE :postAuthorId = `id`;");
                     $authorName->bindValue(':postAuthorId', $post['author_id']);
                     $authorName->execute();
                     $author = $authorName->fetch();
@@ -100,14 +124,14 @@ require "realconfig.php";
 
                     echo "<div class='post-div'>";
                     echo "<span class='topspan'>";
-                    echo "<h2 class='post-user'>" . $author['username'] . "</h2>";
+                    echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
                     echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
                     echo "</span>";
                     echo "<span class='topspan'>";
                     //TODO: MAKE THE POST PAGE
                     echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
                     echo "</span>";
-
+                    echo "<br>";
                     //TODO: FIGURE OUT THE BI_INTERACTIONS
                     echo "<span class='bottomspan'>
                     <p class='post-upvotes'>Upvotes</p>
