@@ -1,15 +1,14 @@
 -- The order of these tables being created is important due to the foreign key restraints.
 
-CREATE TABLE bi_users (
-    id BIGINT(20) NOT NULL AUTO_INCREMENT,
-    username CHAR(20) COLLATE utf8mb4_unicode_ci NOT NULL,
-    password CHAR(255) COLLATE utf8mb4_unicode_ci NOT NULL,
-    is_admin TINYINT(1) NOT NULL DEFAULT 0,
-    creation_time BIGINT(20) NOT NULL DEFAULT 0,
-    last_login_time BIGINT(20) NOT NULL DEFAULT 0,
-    
-    PRIMARY KEY (id),
-    UNIQUE (username)
+CREATE TABLE IF NOT EXISTS `bi_users`(
+    `id` int NOT NULL AUTO_INCREMENT,
+    `username` varchar(20) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `password` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+    `is_admin` boolean,
+    `create_time` DATETIME,
+    `last_login_time` DATETIME,
+    PRIMARY KEY (`id`),
+    CONSTRAINT username_unique UNIQUE (`username`)
 );
 
 CREATE TABLE bi_communities (
@@ -18,7 +17,7 @@ CREATE TABLE bi_communities (
     description VARCHAR(300) NOT NULL,
     
     PRIMARY KEY (id),
-    UNIQUE KEY (name)
+    CONSTRAINT cname_unique UNIQUE KEY (name)
 );
 
 CREATE TABLE bi_posts (
@@ -44,12 +43,6 @@ CREATE TABLE bi_interactions (
     FOREIGN KEY (user_id) REFERENCES bi_users(id),
     FOREIGN KEY (post_id) REFERENCES bi_posts(id)
 );
-
--- INSERT INTO `users`
---     (`username`, `password`, `is_admin`, `create_time`,)
--- VALUES
---     ('Packersfan6', '$2y$10$dHxzgTusmEdqFruaHdsroeY0oI7AEH55AMr4ssPr91S4K84Hi3i/e', TRUE, now())
--- ;
 
 INSERT INTO `bi_users` 
     (`username`, `password`)
