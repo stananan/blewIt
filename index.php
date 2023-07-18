@@ -127,19 +127,34 @@ session_start();
                     echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
                     echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
                     echo "</span>";
-                    echo "<span class='topspan'>";
+                    //echo "<span class='topspan'>";
                     //TODO: MAKE THE POST PAGE
                     echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
-                    echo "</span>";
+                    //echo "</span>";
                     echo "<br>";
                     //TODO: FIGURE OUT THE BI_INTERACTIONS
+
+                    $upvotes = 0;
+                    $downvotes = 0;
+                    
+                    $interactionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id`;");
+                    $interactionTable->bindValue(":postId", $post['id']);
+                    $interactionTable->execute();
+                    $interactions = $interactionTable->fetchAll();
+                    foreach($interactions as $interaction){
+                        if($interaction['interaction_type'] == 1){
+                            $upvotes+=1;
+                        }else if($interaction['interaction_type'] == 2){
+                            $downvotes+=1;
+                        }
+                    }
                     echo "<span class='bottomspan'>
                     <p class='post-upvotes'>Upvotes</p>
-                    <p class='post-upvotes-total'>0</p>
+                    <p class='post-upvotes-total'>".$upvotes."</p>
                     </span>
                     <span class='bottomspan'>
                         <p class='post-downvotes'>Downvotes</p>
-                        <p class='post-downvotes-total'>0</p>
+                        <p class='post-downvotes-total'>".$downvotes."</p>
                     </span>";
 
                     echo "</div>";

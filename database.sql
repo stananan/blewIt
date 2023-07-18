@@ -34,6 +34,7 @@ CREATE TABLE bi_posts (
     FOREIGN KEY (reply_id) REFERENCES bi_posts(id),
     FOREIGN KEY (community_id) REFERENCES bi_communities(id)
 );
+--1 is like, 2 is dislike
 
 CREATE TABLE bi_interactions (
     user_id BIGINT(20) NOT NULL,

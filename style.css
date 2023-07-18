@@ -106,4 +106,5 @@ select {
     margin-bottom: 4%;
     border-radius: 15px;
     padding: 10px;
+    word-wrap: break-word;
 }
