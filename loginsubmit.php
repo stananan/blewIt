@@ -25,7 +25,7 @@ try {
                     $userTable = $dbh->prepare("UPDATE `bi_users` SET `last_login_time` = NOW() WHERE :username = `username`;");
                     $userTable->bindValue(":username", $username);
                     $userTable->execute();
-                    $_SESSION["user"] = $loginUser;
+                    $_SESSION["user"] = $loginUser['id'];
                     header("Location: index.php");
                 } else {
                     header("Location: login.php");
@@ -33,7 +33,9 @@ try {
                 }
             }
         } else {
-            echo "Error, please try again";
+
+            header("Location: login.php");
+            $_SESSION["message"] = "Error, please try again";
         }
     } else {
         echo "Not valid username or password!";
@@ -41,7 +43,8 @@ try {
 } catch (PDOException $e) {
     $errormessage = $e->getMessage();
     $errorcode = $e->getCode();
-
+    header("Location: login.php");
+    $_SESSION["message"] = $errormessage;
 
     echo $e;
 }

@@ -13,7 +13,8 @@ CREATE TABLE bi_users (
 );
 
 CREATE TABLE bi_communities (
-    id BIGINT(20) NOT NULL,
+    id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    user_id BIGINT(20) NOT NULL DEFAULT 0,
     name CHAR(30) NOT NULL,
     description VARCHAR(300) NOT NULL,
     
@@ -34,7 +35,7 @@ CREATE TABLE bi_posts (
     FOREIGN KEY (reply_id) REFERENCES bi_posts(id),
     FOREIGN KEY (community_id) REFERENCES bi_communities(id)
 );
---1 is like, 2 is dislike
+
 
 CREATE TABLE bi_interactions (
     user_id BIGINT(20) NOT NULL,
@@ -46,11 +47,11 @@ CREATE TABLE bi_interactions (
     FOREIGN KEY (post_id) REFERENCES bi_posts(id)
 );
 
-INSERT INTO `bi_users` 
-    (`username`, `password`)
-VALUES 
-    ('hello', '$2y$10$udY7AW1lEKowEw9kFqeNVOwstPMAFMOc7/NuNoCWSEw7z1Aht23Jq')
-;
+-- INSERT INTO `bi_users` 
+--     (`username`, `password`)
+-- VALUES 
+--     ('hello', '$2y$10$udY7AW1lEKowEw9kFqeNVOwstPMAFMOc7/NuNoCWSEw7z1Aht23Jq')
+-- ;
 
 
 INSERT INTO `bi_communities` (`id`, `name`, `description`)

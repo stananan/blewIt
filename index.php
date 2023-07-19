@@ -1,6 +1,7 @@
 <?php
 require "realconfig.php";
 session_start();
+$dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
 ?>
 
@@ -26,16 +27,24 @@ session_start();
 
                 <?php
                 if (isset($_SESSION["user"])) {
-                    echo "<button class='nav'><a href='profile.php?id=" . $_SESSION['user']['id'] . "'>" . $_SESSION['user']['username'] . "</a></button>";
-                    echo "<button class='nav'><a href='logout.php'>Log out</a></button>";
-                    echo "<button class='nav'><a href='index.php'>Home</a></button>";
+                    try {
+                        $userNameTable = $dbh->prepare("SELECT `username` FROM bi_users WHERE :id = `id`");
+                        $userNameTable->bindValue(":id", $_SESSION["user"]);
+                        $userNameTable->execute();
+                        $userName = $userNameTable->fetch();
+                        echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
+                        echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
+                        echo "<div class='nav'><a href='index.php'>Home</a></div>";
+                    } catch (PDOException $e) {
+                        echo "<p>Error: {$e->getMessage()}</p>";
+                    }
                 } else {
                 ?>
-                    <button class="nav"><a href="login.php">Login</a></button>
+                    <div class="nav"><a href="login.php">Login</a></div>
 
-                    <button class="nav"><a href="register.php">Register</a></button>
+                    <div class="nav"><a href="register.php">Register</a></div>
 
-                    <button class='nav'><a href='index.php'>Home</a></button>
+                    <div class='nav'><a href='index.php'>Home</a></div>
                 <?php
                 }
                 ?>
@@ -45,37 +54,60 @@ session_start();
 
         <?php
         if (isset($_SESSION["user"])) {
+            if (isset($_SESSION["upload-error"])) {
+                if ($_SESSION["upload-error"] == true) echo "<h3 class='error bad'>Unsuccesful Upload</h3>";
+                if ($_SESSION["upload-error"] == false) echo "<h3 class='error good'>Succesful Upload</h3>";
+                unset($_SESSION['upload-error']);
+            }
+            if (isset($_SESSION["sublewit-error"])) {
+                if ($_SESSION["sublewit-error"] == true) echo "<h3 class='error bad'>Unsuccesful Sublewit</h3>";
+                if ($_SESSION["sublewit-error"] == false) echo "<h3 class='error good'>Succesful Sublewit</h3>";
+                unset($_SESSION['sublewit-error']);
+            }
         ?>
-            <div class="upload-div">
-                <form action="upload.php" method="post" class="upload-form">
+            <div class="create-div">
+                <div class="upload-div">
+                    <form action="upload.php" method="post" class="upload-form">
+                        <h2>Create a Post</h2>
+                        <textarea name="upload-val" id="upload-text" cols="30" rows="5" placeholder="Text" required style="resize: none;" maxlength="1024"></textarea>
+                        <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
+                        <select name="sublewit-val" id="upload-sublewit">
+                            <?php
 
-                    <textarea name="upload-val" id="upload-text" cols="30" rows="5" placeholder="Text" required></textarea>
-                    <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
-                    <select name="sublewit-val" id="upload-sublewit" required>
-                        <?php
+                            try {
 
-                        try {
-                            $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
-                            $communitiesTable = $dbh->prepare("SELECT * FROM `bi_communities`;");
-                            $communitiesTable->execute();
+                                $communitiesTable = $dbh->prepare("SELECT * FROM `bi_communities` ORDER BY `name` ASC;");
+                                $communitiesTable->execute();
 
-                            $communitiesOptions = $communitiesTable->fetchAll();
-                            foreach ($communitiesOptions as $communitiesOption) {
-                                echo "<option value='" . $communitiesOption['id'] . "'>" . $communitiesOption['name'] . "</option>";
+                                $communitiesOptions = $communitiesTable->fetchAll();
+                                foreach ($communitiesOptions as $communitiesOption) {
+                                    echo "<option value='" . $communitiesOption['id'] . "'>" . $communitiesOption['name'] . "</option>";
+                                }
+                            } catch (PDOException $e) {
+                                echo "<p>Error: {$e->getMessage()}</p>";
                             }
-                        } catch (PDOException $e) {
-                            echo "<p>Error: {$e->getMessage()}</p>";
-                        }
 
-                        ?>
+                            ?>
 
-                    </select>
+                        </select>
 
-                    <button class="upload-button" type="submit">Post</button>
-                </form>
+                        <button class="upload-button" type="submit">Post</button>
+                    </form>
+                </div>
+                <div class="sublewit-div">
+                    <form action="sublewit.php" method="post" class="upload-form">
+                        <h2>Create a Sublewit</h2>
+                        <input type="text" name="sublewit-val" required placeholder="Genre">
+                        <textarea name="desc-val" id="desc-text" cols="30" rows="5" placeholder="Give a brief description" required style="resize: none;" maxlength="300"></textarea>
+                        <button class="upload-button" type="submit">Create</button>
+                    </form>
+                </div>
             </div>
+
         <?php
+
         }
+
         ?>
 
 
@@ -105,7 +137,7 @@ session_start();
 
             <?php
             try {
-                $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
+
                 $postsTable = $dbh->prepare("SELECT * FROM `bi_posts` ORDER BY `creation_time` DESC;");
 
                 $postsTable->execute();
@@ -123,39 +155,46 @@ session_start();
                     $sublewIt = $sublewItName->fetch();
 
                     echo "<div class='post-div'>";
-                    echo "<span class='topspan'>";
+                    //echo "<span class='topspan'>";
                     echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
                     echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
-                    echo "</span>";
+                    //echo "</span>";
                     //echo "<span class='topspan'>";
                     //TODO: MAKE THE POST PAGE
                     echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
                     //echo "</span>";
-                    echo "<br>";
+
                     //TODO: FIGURE OUT THE BI_INTERACTIONS
 
                     $upvotes = 0;
                     $downvotes = 0;
-                    
+
                     $interactionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id`;");
                     $interactionTable->bindValue(":postId", $post['id']);
                     $interactionTable->execute();
                     $interactions = $interactionTable->fetchAll();
-                    foreach($interactions as $interaction){
-                        if($interaction['interaction_type'] == 1){
-                            $upvotes+=1;
-                        }else if($interaction['interaction_type'] == 2){
-                            $downvotes+=1;
+                    foreach ($interactions as $interaction) {
+                        if ($interaction['interaction_type'] == 1) {
+                            $upvotes += 1;
+                        } else if ($interaction['interaction_type'] == 2) {
+                            $downvotes += 1;
                         }
                     }
-                    echo "<span class='bottomspan'>
-                    <p class='post-upvotes'>Upvotes</p>
-                    <p class='post-upvotes-total'>".$upvotes."</p>
-                    </span>
-                    <span class='bottomspan'>
+                    echo "<div class='bottomspan'>
+                    
+                        <p class='post-upvotes'>Upvotes</p>
+                        
+                        <p class='post-upvotes-total'>" . $upvotes . "</p>
+                    </div>
+                    
+                    <div class='bottomspan'>
                         <p class='post-downvotes'>Downvotes</p>
-                        <p class='post-downvotes-total'>".$downvotes."</p>
-                    </span>";
+                        
+                        <p class='post-downvotes-total'>" . $downvotes . "</p>
+                    </div>";
+                    $datetime = strtotime($post['creation_time']);
+                    $formatted_date = date('m/d/Y h:i:s A', $datetime);
+                    echo "<p><i>" . $formatted_date . "</i></p>";
 
                     echo "</div>";
                 }

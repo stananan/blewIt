@@ -1,6 +1,7 @@
 <?php
 require "realconfig.php";
 session_start();
+$dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
 if (!isset(($_GET['id']))) {
     http_response_code(404);
@@ -9,10 +10,6 @@ if (!isset(($_GET['id']))) {
 }
 
 try {
-    $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
-
-
-
     $usersTableCheck = $dbh->prepare("SELECT `id` from `bi_users`");
     $usersTableCheck->execute();
     $usersCheck = $usersTableCheck->fetchAll();
@@ -49,20 +46,29 @@ try {
         <div class="header-div">
             <h1 class="header-title">Blew It</h1>
             <div class="header-links">
+
                 <?php
                 if (isset($_SESSION["user"])) {
-                    echo "<button class='nav'><a href='profile.php?id=" . $_SESSION['user']['id'] . "'>" . $_SESSION['user']['username'] . "</a></button>";
-                    echo "<button class='nav'><a href='logout.php'>Log out</a></button>";
-                    echo "<button class='nav'><a href='index.php'>Home</a></button>";
+                    try {
+                        $userNameTable = $dbh->prepare("SELECT `username` FROM bi_users WHERE :id = `id`");
+                        $userNameTable->bindValue(":id", $_SESSION["user"]);
+                        $userNameTable->execute();
+                        $userName = $userNameTable->fetch();
+                        echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
+                        echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
+                        echo "<div class='nav'><a href='index.php'>Home</a></div>";
+                    } catch (PDOException $e) {
+                        echo "<p>Error: {$e->getMessage()}</p>";
+                    }
                 } else {
                 ?>
-                    <button class="nav"><a href="login.php">Login</a></button>
-                    <button class="nav"><a href="register.php">Register</a></button>
-                    <button class='nav'><a href='index.php'>Home</a></button>
+                    <div class="nav"><a href="login.php">Login</a></div>
+
+                    <div class="nav"><a href="register.php">Register</a></div>
+
+                    <div class='nav'><a href='index.php'>Home</a></div>
                 <?php
                 }
-
-
                 ?>
             </div>
 
@@ -70,12 +76,12 @@ try {
         <div class="posts-container">
             <div class="post-div">
                 <?php
-                $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                 try {
-                    $userTable = $dbh->prepare("SELECT * FROM `bi_users` WHERE :id = `id`;");
+                    $userTable = $dbh->prepare("SELECT `creation_time`, `username`, `is_admin`, `last_login_time`, `id` FROM `bi_users` WHERE :id = `id`;");
                     $userTable->bindValue(":id", $_GET['id']);
                     $userTable->execute();
                     $user = $userTable->fetch();
+
                     echo "<h1>" . $user["username"] . "</h1>";
                     if ($user["is_admin"] == 0) {
                         echo "<p>Bro is not an admin</p>";
@@ -100,6 +106,30 @@ try {
                         $datetime = strtotime($userPost['creation_time']);
                         $formatted_date = date('m/d/Y h:i:s A', $datetime);
                         echo "<p><a href = 'post.php?id=" . $userPost['id'] . "'>Post created on " . $formatted_date . "</a></p>";
+                    }
+
+                    $interactionsTable = $dbh->prepare("SELECT bi_interactions.interaction_type, bi_interactions.user_id, bi_interactions.post_id FROM `bi_interactions` JOIN `bi_posts` ON bi_posts.author_id = :userId AND bi_posts.id = bi_interactions.post_id;");
+                    $interactionsTable->bindValue("userId", $user['id']);
+                    $interactionsTable->execute();
+                    $interactions = $interactionsTable->fetchAll();
+                    $upvotes = 0;
+                    $downvotes = 0;
+                    foreach ($interactions as $interaction) {
+                        if ($interaction['interaction_type'] == 2) {
+                            $downvotes += 1;
+                        } else if ($interaction['interaction_type'] == 1) {
+                            $upvotes += 1;
+                        }
+                    }
+                    echo "<h2>Bro has garnered " . $upvotes . " upvotes on his posts</h2>";
+                    echo "<h2>Bro has garnered " . $downvotes . " downvotes on his posts</h2>";
+
+                    $sublewitTable = $dbh->prepare("SELECT * FROM `bi_communities` WHERE :userId = user_id;");
+                    $sublewitTable->bindValue(":userId", $user['id']);
+                    $sublewitTable->execute();
+                    $sublewits = $sublewitTable->fetchAll();
+                    foreach ($sublewits as $sublewit) {
+                        echo "<p>Bro is the founder of the " . $sublewit['name'] . " sublewit</p>";
                     }
                 } catch (PDOException $e) {
                     echo "<p>Error: {$e->getMessage()}</p>";

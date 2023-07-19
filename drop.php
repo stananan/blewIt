@@ -7,6 +7,11 @@
 <body>
     <?php
     require "realconfig.php";
+    session_start();
+    if (isset($_SESSION["user"])) {
+        unset($_SESSION["user"]);
+    }
+
 
     try {
         $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);

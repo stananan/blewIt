@@ -4,9 +4,6 @@ session_start();
 //we have to dedicate a day to some backend validation
 try {
     if (isset($_POST["username"]) && isset($_POST["password"])) {
-
-
-
         $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
         $isadmin = 0;
@@ -31,13 +28,14 @@ try {
             $userTable = $dbh->prepare("SELECT * FROM bi_users WHERE :username = username;");
             $userTable->bindValue(":username", $username);
             $userTable->execute();
-            $_SESSION["user"] = $userTable->fetch();
+            $_SESSION["user"] = $userTable->fetch()['id'];
             header("Location: index.php");
         } else {
             echo "Error, please try again";
         }
     } else {
-        echo "Not valid username or password!";
+        header("Location: register.php");
+        $_SESSION["message"] = "Not valid username or password!";
     }
 } catch (PDOException $e) {
     $errormessage = $e->getMessage();

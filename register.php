@@ -24,12 +24,12 @@
 
         echo "<input type = 'text' name = 'username' required>";
         echo "<h3>Password:</h3>";
-        echo "<input type ='text' name = 'password' required>";
+        echo "<input type ='password' name = 'password' required>";
         echo "<h3>Admin Code:</h3>";
 
 
 
-        echo "<input type='text' name = 'admincode'>";
+        echo "<input type='password' name = 'admincode'>";
         ?>
         <button type="submit">Create</button>
 
