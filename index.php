@@ -32,9 +32,13 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                         $userNameTable->bindValue(":id", $_SESSION["user"]);
                         $userNameTable->execute();
                         $userName = $userNameTable->fetch();
+                        if($_SESSION["admin"]==1){
+                            echo "<div class='nav'><a href='admin.php'>Admin controls</a></div>";
+                        }
                         echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
                         echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
                         echo "<div class='nav'><a href='index.php'>Home</a></div>";
+                        var_dump($_SESSION["admin"]);
                     } catch (PDOException $e) {
                         echo "<p>Error: {$e->getMessage()}</p>";
                     }

@@ -54,6 +54,9 @@ try {
                         $userNameTable->bindValue(":id", $_SESSION["user"]);
                         $userNameTable->execute();
                         $userName = $userNameTable->fetch();
+                        if($_SESSION["admin"]==1){
+                            echo "<div class='nav'><a href='admin.php'>Admin controls</a></div>";
+                        }
                         echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
                         echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
                         echo "<div class='nav'><a href='index.php'>Home</a></div>";

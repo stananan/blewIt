@@ -29,6 +29,10 @@ try {
             $userTable->bindValue(":username", $username);
             $userTable->execute();
             $_SESSION["user"] = $userTable->fetch()['id'];
+            $userisadmin = $dbh->prepare("SELECT * FROM bi_users WHERE :username = username;");
+            $userisadmin->bindValue(":username", $username);
+            $userisadmin->execute();
+            $_SESSION["admin"] = $userisadmin->fetch()['is_admin'];
             header("Location: index.php");
         } else {
             echo "Error, please try again";

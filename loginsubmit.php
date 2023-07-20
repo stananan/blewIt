@@ -26,6 +26,10 @@ try {
                     $userTable->bindValue(":username", $username);
                     $userTable->execute();
                     $_SESSION["user"] = $loginUser['id'];
+                    $userisadmin = $dbh->prepare("SELECT * FROM bi_users WHERE :username = username;");
+                    $userisadmin->bindValue(":username", $username);
+                    $userisadmin->execute();
+                    $_SESSION["admin"] = $userisadmin->fetch()['is_admin'];
                     header("Location: index.php");
                 } else {
                     header("Location: login.php");
