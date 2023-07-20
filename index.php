@@ -103,6 +103,7 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                         <h2>Create a Sublewit</h2>
                         <input type="text" name="sublewit-val" required placeholder="Genre">
                         <textarea name="desc-val" id="desc-text" cols="30" rows="5" placeholder="Give a brief description" required style="resize: none;" maxlength="300"></textarea>
+
                         <button class="upload-button" type="submit">Create</button>
                     </form>
                 </div>
@@ -148,43 +149,44 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
                 $posts = $postsTable->fetchAll();
                 foreach ($posts as $post) {
-                    $authorName = $dbh->prepare("SELECT * FROM `bi_users` WHERE :postAuthorId = `id`;");
-                    $authorName->bindValue(':postAuthorId', $post['author_id']);
-                    $authorName->execute();
-                    $author = $authorName->fetch();
+                    if ($post['reply_id'] == NULL) {
+                        $authorName = $dbh->prepare("SELECT * FROM `bi_users` WHERE :postAuthorId = `id`;");
+                        $authorName->bindValue(':postAuthorId', $post['author_id']);
+                        $authorName->execute();
+                        $author = $authorName->fetch();
 
-                    $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `id`;");
-                    $sublewItName->bindValue(':postSublewit', $post['community_id']);
-                    $sublewItName->execute();
-                    $sublewIt = $sublewItName->fetch();
+                        $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `id`;");
+                        $sublewItName->bindValue(':postSublewit', $post['community_id']);
+                        $sublewItName->execute();
+                        $sublewIt = $sublewItName->fetch();
 
-                    echo "<div class='post-div'>";
-                    //echo "<span class='topspan'>";
-                    echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
-                    echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
-                    //echo "</span>";
-                    //echo "<span class='topspan'>";
-                    //TODO: MAKE THE POST PAGE
-                    echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
-                    //echo "</span>";
+                        echo "<div class='post-div'>";
+                        //echo "<span class='topspan'>";
+                        echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
+                        echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
+                        //echo "</span>";
+                        //echo "<span class='topspan'>";
+                        //TODO: MAKE THE POST PAGE
+                        echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
+                        //echo "</span>";
 
-                    //TODO: FIGURE OUT THE BI_INTERACTIONS
+                        //TODO: FIGURE OUT THE BI_INTERACTIONS
 
-                    $upvotes = 0;
-                    $downvotes = 0;
+                        $upvotes = 0;
+                        $downvotes = 0;
 
-                    $interactionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id`;");
-                    $interactionTable->bindValue(":postId", $post['id']);
-                    $interactionTable->execute();
-                    $interactions = $interactionTable->fetchAll();
-                    foreach ($interactions as $interaction) {
-                        if ($interaction['interaction_type'] == 1) {
-                            $upvotes += 1;
-                        } else if ($interaction['interaction_type'] == 2) {
-                            $downvotes += 1;
+                        $interactionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id`;");
+                        $interactionTable->bindValue(":postId", $post['id']);
+                        $interactionTable->execute();
+                        $interactions = $interactionTable->fetchAll();
+                        foreach ($interactions as $interaction) {
+                            if ($interaction['interaction_type'] == 1) {
+                                $upvotes += 1;
+                            } else if ($interaction['interaction_type'] == 2) {
+                                $downvotes += 1;
+                            }
                         }
-                    }
-                    echo "<div class='bottomspan'>
+                        echo "<div class='bottomspan'>
                     
                         <p class='post-upvotes'>Upvotes</p>
                         
@@ -196,11 +198,12 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                         
                         <p class='post-downvotes-total'>" . $downvotes . "</p>
                     </div>";
-                    $datetime = strtotime($post['creation_time']);
-                    $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                    echo "<p><i>" . $formatted_date . "</i></p>";
+                        $datetime = strtotime($post['creation_time']);
+                        $formatted_date = date('m/d/Y h:i:s A', $datetime);
+                        echo "<p><i>" . $formatted_date . "</i></p>";
 
-                    echo "</div>";
+                        echo "</div>";
+                    }
                 }
             } catch (PDOException $e) {
                 echo "<p>Error: {$e->getMessage()}</p>";

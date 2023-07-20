@@ -98,19 +98,6 @@ try {
                     $formatted_date = date('m/d/Y h:i:s A', $datetime);
                     echo "<p>Bro last logged in on " . $formatted_date;
 
-
-                    echo "<h2>Bro's posts</h2>";
-                    $userPostTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :userId = `author_id`");
-                    $userPostTable->bindValue(":userId", $_GET['id']);
-                    $userPostTable->execute();
-                    $userPosts = $userPostTable->fetchAll();
-
-                    foreach ($userPosts as $userPost) {
-                        $datetime = strtotime($userPost['creation_time']);
-                        $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                        echo "<p><a href = 'post.php?id=" . $userPost['id'] . "'>Post created on " . $formatted_date . "</a></p>";
-                    }
-
                     $interactionsTable = $dbh->prepare("SELECT bi_interactions.interaction_type, bi_interactions.user_id, bi_interactions.post_id FROM `bi_interactions` JOIN `bi_posts` ON bi_posts.author_id = :userId AND bi_posts.id = bi_interactions.post_id;");
                     $interactionsTable->bindValue("userId", $user['id']);
                     $interactionsTable->execute();
@@ -124,8 +111,8 @@ try {
                             $upvotes += 1;
                         }
                     }
-                    echo "<h2>Bro has garnered " . $upvotes . " upvotes on his posts</h2>";
-                    echo "<h2>Bro has garnered " . $downvotes . " downvotes on his posts</h2>";
+                    echo "<h2>Bro has garnered " . $upvotes . " upvotes on his posts and comments</h2>";
+                    echo "<h2>Bro has garnered " . $downvotes . " downvotes on his posts and comments</h2>";
 
                     $sublewitTable = $dbh->prepare("SELECT * FROM `bi_communities` WHERE :userId = user_id;");
                     $sublewitTable->bindValue(":userId", $user['id']);
@@ -133,6 +120,22 @@ try {
                     $sublewits = $sublewitTable->fetchAll();
                     foreach ($sublewits as $sublewit) {
                         echo "<p>Bro is the founder of the " . $sublewit['name'] . " sublewit</p>";
+                    }
+
+                    echo "<h2>Bro's posts</h2>";
+                    $userPostTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :userId = `author_id`");
+                    $userPostTable->bindValue(":userId", $_GET['id']);
+                    $userPostTable->execute();
+                    $userPosts = $userPostTable->fetchAll();
+
+                    foreach ($userPosts as $userPost) {
+                        $datetime = strtotime($userPost['creation_time']);
+                        $formatted_date = date('m/d/Y h:i:s A', $datetime);
+                        if ($userPost['reply_id'] == NULL) {
+                            echo "<p><a href = 'post.php?id=" . $userPost['id'] . "'>Post created on " . $formatted_date . "</a></p>";
+                        } else {
+                            echo "<p><a href = 'post.php?id=" . $userPost['id'] . "'>Comment created on " . $formatted_date . "</a></p>";
+                        }
                     }
                 } catch (PDOException $e) {
                     echo "<p>Error: {$e->getMessage()}</p>";
