@@ -9,14 +9,14 @@ if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin'
 
 try {
 
-    $postTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE `author_id` = :userid;");
-    $postTable->bindValue(':userid', intval($_GET['id']));
+    $postTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE `community_id` = :communityId;");
+    $postTable->bindValue(':communityId', intval($_GET['id']));
     $postTable->execute();
     $posts = $postTable->fetchAll();
 
 
     foreach ($posts as $post) {
-        //delete interactions on his posts
+
         $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `post_id` = :postId;");
         $interactionTable->bindValue(':postId', $post['id']);
         $interactionTable->execute();
@@ -30,18 +30,13 @@ try {
 
     }
 
-    $postTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `author_id` = :userid;");
-    $postTable->bindValue(':userid', intval($_GET['id']));
+    $postTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `community_id` = :communityId;");
+    $postTable->bindValue(':communityId', intval($_GET['id']));
     $postTable->execute();
 
-    $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `user_id` = :userId;");
-    $interactionTable->bindValue(':userId', intval($_GET['id']));
-    $interactionTable->execute();
-
-
-    $userTable = $dbh->prepare("DELETE FROM `bi_users` WHERE `id` =  :userid;");
-    $userTable->bindValue(':userid', intval($_GET['id']));
-    $userTable->execute();
+    $sublewIt = $dbh->prepare("DELETE FROM `bi_communities` WHERE `id` = :id;");
+    $sublewIt->bindValue(':id', intval($_GET['id']));
+    $sublewIt->execute();
 
 
 

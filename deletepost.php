@@ -2,19 +2,23 @@
 require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
+
+if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
+    header("location: index.php");
+}
+
 try {
-    if (!isset($_SESSION['user']) || !isset($_GET["id"])) {
-        header("location: admin.php");
-    }
-    else{
+
+    $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `post_id` = :postId;");
+    $interactionTable->bindValue(':postId', intval($_GET['id']));
+    $interactionTable->execute();
+
     $sth = $dbh->prepare("DELETE FROM `bi_posts` WHERE `id` =  :postid");
     $sth->bindValue(':postid', intval($_GET['id']));
     $sth->execute();
+
     header("Location: admin.php");
-    }
-    
-} 
-catch (PDOException $e) {
+} catch (PDOException $e) {
 
 
     $errormessage = $e->getMessage();
@@ -23,4 +27,3 @@ catch (PDOException $e) {
 
     echo $e;
 }
-?>

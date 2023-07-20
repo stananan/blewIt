@@ -23,7 +23,9 @@ try {
     }
     if ($check == false) {
         http_response_code(404);
-        echo "Error 404: Page not found";
+        echo "<h1 style='text-align: center;'>Error 404: Page not found</h1>";
+
+        echo "<h1 style='text-align: center;'>This Post does not exist or it was deleted by a moderator</h1>";
         exit();
     }
     $postsTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :getId = `id`;");
@@ -60,7 +62,7 @@ try {
                         $userNameTable->bindValue(":id", $_SESSION["user"]);
                         $userNameTable->execute();
                         $userName = $userNameTable->fetch();
-                        if($_SESSION["admin"]==1){
+                        if ($_SESSION["admin"] == 1) {
                             echo "<div class='nav'><a href='admin.php'>Admin controls</a></div>";
                         }
                         echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";

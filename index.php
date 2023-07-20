@@ -32,13 +32,12 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                         $userNameTable->bindValue(":id", $_SESSION["user"]);
                         $userNameTable->execute();
                         $userName = $userNameTable->fetch();
-                        if($_SESSION["admin"]==1){
+                        if ($_SESSION["admin"] == 1) {
                             echo "<div class='nav'><a href='admin.php'>Admin controls</a></div>";
                         }
                         echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
                         echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
                         echo "<div class='nav'><a href='index.php'>Home</a></div>";
-                        var_dump($_SESSION["admin"]);
                     } catch (PDOException $e) {
                         echo "<p>Error: {$e->getMessage()}</p>";
                     }
@@ -70,6 +69,7 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
             }
         ?>
             <div class="create-div">
+
                 <div class="upload-div">
                     <form action="upload.php" method="post" class="upload-form">
                         <h2>Create a Post</h2>
@@ -98,10 +98,11 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                         <button class="upload-button" type="submit">Post</button>
                     </form>
                 </div>
+
                 <div class="sublewit-div">
                     <form action="sublewit.php" method="post" class="upload-form">
                         <h2>Create a Sublewit</h2>
-                        <input type="text" name="sublewit-val" required placeholder="Genre">
+                        <input type="text" name="sublewit-val" required placeholder="Genre" maxlength="20">
                         <textarea name="desc-val" id="desc-text" cols="30" rows="5" placeholder="Give a brief description" required style="resize: none;" maxlength="300"></textarea>
 
                         <button class="upload-button" type="submit">Create</button>
@@ -117,28 +118,6 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
 
         <div class="posts-container">
-            <!-- <div class="post-div">
-                <span class="topspan">
-                    <h2 class="post-user">Packersfan</h2>
-                    <p class="post-sublewit"><i>Sports</i></p>
-                </span>
-                <span class="topspan">
-                    <p class="post-content">The packers are a very cool team! <a href="post.php"> Click to see post</a></p>
-                    
-
-                </span>
-                <span class="bottomspan">
-                    <p class="post-upvotes">Upvotes</p>
-                    <p class="post-upvotes-total">0</p>
-                </span>
-                <span class="bottomspan">
-                    <p class="post-downvotes">Downvotes</p>
-                    <p class="post-downvotes-total">0</p>
-                </span>
-
-
-
-            </div> -->
 
             <?php
             try {
@@ -161,16 +140,14 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                         $sublewIt = $sublewItName->fetch();
 
                         echo "<div class='post-div'>";
-                        //echo "<span class='topspan'>";
+
                         echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
                         echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
-                        //echo "</span>";
-                        //echo "<span class='topspan'>";
-                        //TODO: MAKE THE POST PAGE
-                        echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
-                        //echo "</span>";
 
-                        //TODO: FIGURE OUT THE BI_INTERACTIONS
+                        echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
+
+
+
 
                         $upvotes = 0;
                         $downvotes = 0;
@@ -209,6 +186,7 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                 echo "<p>Error: {$e->getMessage()}</p>";
             }
             ?>
+
 
         </div>
     </div>

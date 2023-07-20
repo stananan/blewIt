@@ -9,7 +9,7 @@ try {
         $isadmin = 0;
 
         if (isset($_POST["admincode"])) {
-            if (strcmp(htmlspecialchars($_POST["admincode"]), "admin123") == 0) {
+            if (password_verify(htmlspecialchars($_POST["admincode"]), adminCode)) {
                 $isadmin = 1;
             }
         }
@@ -29,6 +29,7 @@ try {
             $userTable->bindValue(":username", $username);
             $userTable->execute();
             $_SESSION["user"] = $userTable->fetch()['id'];
+
             $userisadmin = $dbh->prepare("SELECT * FROM bi_users WHERE :username = username;");
             $userisadmin->bindValue(":username", $username);
             $userisadmin->execute();

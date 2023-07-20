@@ -32,7 +32,7 @@ CREATE TABLE bi_posts (
     
     PRIMARY KEY (id),
     FOREIGN KEY (author_id) REFERENCES bi_users(id),
-    FOREIGN KEY (reply_id) REFERENCES bi_posts(id),
+    
     FOREIGN KEY (community_id) REFERENCES bi_communities(id)
 );
 
