@@ -199,8 +199,8 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     ?>
                 </table>
             </div>
-            <a href="drop.php">Drop tables</a>
-            <a href="install.php">Install tables</a>
+            <!-- <a href="drop.php">Drop tables</a>
+            <a href="install.php">Install tables</a> -->
         </div>
     </div>
 </body>
