@@ -178,7 +178,9 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                         $datetime = strtotime($post['creation_time']);
                         $formatted_date = date('m/d/Y h:i:s A', $datetime);
                         echo "<p><i>" . $formatted_date . "</i></p>";
-
+                        if($post['admin_change'] != NULL){
+                            echo "<p><i>This post was modified by an admin</i></p>";
+                        }
                         echo "</div>";
                     }
                 }

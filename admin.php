@@ -120,7 +120,9 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         <th>Creation Time</th>
                         <th>Author Id</th>
                         <th>Community Id</th>
+                        <th>Changed By Admin</th>
                         <th>Delete button</th>
+                        <th>Edit Button</th>
                     </tr>
                     <?php
                     try {
@@ -148,9 +150,17 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                             echo "<td><a href='profile.php?id=" . $post['author_id'] . "'>" . $post['author_id'] . "</td>";
 
                             echo "<td>" . $post['community_id'] . "</td>";
+                            if($post['admin_change'] != NULL){
+                                echo "<td>Yes</td>";
+                            }else{
+                                echo "<td>False</td>";
+                            }
+                            
 
 
                             echo "<td><a href = \"deletepost.php?id={$postid}\">DELETE POST</a></td>";
+
+                            echo "<td><a href = \"updatepost.php?id={$postid}\">UPDATE POST</a></td>";
                             echo "</tr>";
                         }
                     } catch (PDOException $e) {
@@ -161,6 +171,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                 </table>
             </div>
             <div class="post-div">
+                <h2>Sublewits</h2>
                 <table>
                     <tr>
                         <th>Id</th>

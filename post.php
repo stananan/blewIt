@@ -156,8 +156,19 @@ try {
                 $datetime = strtotime($post['creation_time']);
                 $formatted_date = date('m/d/Y h:i:s A', $datetime);
                 echo "<p><i>" . $formatted_date . "</i></p>";
+
                 if ($post['reply_id'] != NULL) {
-                    echo "<p>This post is a comment to <a href='post.php?id=" . $post['reply_id'] . "'><i>this post</i></a></p>";
+                    $postCommentTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :id = `id`");
+                    $postCommentTable->bindValue(":id", $post['reply_id']);
+                    $postCommentTable->execute();
+                    $postComment = $postCommentTable->fetch();
+
+                    if($postComment['reply_id'] != NULL){
+                        echo "<p>This comment is a comment to <a href='post.php?id=" . $post['reply_id'] . "'><i>this comment</i></a></p>";
+                    }else if($postComment['reply_id'] == NULL){
+                        echo "<p>This comment is a comment to <a href='post.php?id=" . $post['reply_id'] . "'><i>this post</i></a></p>";
+                    }
+                    
                 }
 
                 echo "</div>";

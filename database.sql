@@ -29,6 +29,7 @@ CREATE TABLE bi_posts (
     creation_time BIGINT(20) NOT NULL,
     reply_id BIGINT(20),
     community_id BIGINT(20) NOT NULL,
+    admin_change TINYINT(1),
     
     PRIMARY KEY (id),
     FOREIGN KEY (author_id) REFERENCES bi_users(id),
