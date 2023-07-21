@@ -32,6 +32,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
     <div class="container">
         <?php
         require_once "header.php";
+
         ?>
 
 
@@ -71,7 +72,6 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
 
                             echo "<td><a href = \"deleteuser.php?id={$userid}\">DELETE USER</a></td>";
                             echo "</tr>";
-                            $_SESSION["user{$userid}"] = $userid;
                         }
                     } catch (PDOException $e) {
                         echo "<p>Error: {$e->getMessage()}</p>";
@@ -185,8 +185,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     ?>
                 </table>
             </div>
-            <!-- <a href="drop.php">Drop tables</a>
-            <a href="install.php">Install tables</a> -->
+
         </div>
     </div>
 </body>

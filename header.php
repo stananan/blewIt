@@ -6,6 +6,7 @@
 
         if (isset($_SESSION["user"])) {
             try {
+                echo "<div class='nav'><form action='search.php' method='get'><input type = 'text' name = 'search-val'><button type='submit'>Search</button></form></div>";
                 $userNameTable = $dbh->prepare("SELECT `username` FROM bi_users WHERE :id = `id`");
                 $userNameTable->bindValue(":id", $_SESSION["user"]);
                 $userNameTable->execute();
