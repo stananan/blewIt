@@ -9,8 +9,9 @@
 require "realconfig.php";
 session_start();
 
-if (!isset($_SESSION['user'])) {
-    header("location: index.php");
+if (!isset($_SESSION['user']) || !isset($_POST['comment-val']) || !isset($_POST['sublewit-val']) || !isset($_POST['reply-val'])) {
+    $_SESSION["comment-error"] = true;
+    header("Location: post.php?id=" . htmlspecialchars($_POST['reply-val']) . "");
 }
 try {
     $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);

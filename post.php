@@ -51,38 +51,9 @@ try {
 
 <body>
     <div class="container">
-        <div class="header-div">
-            <h1 class="header-title">Blew It</h1>
-            <div class="header-links">
-
-                <?php
-                if (isset($_SESSION["user"])) {
-                    try {
-                        $userNameTable = $dbh->prepare("SELECT `username` FROM bi_users WHERE :id = `id`");
-                        $userNameTable->bindValue(":id", $_SESSION["user"]);
-                        $userNameTable->execute();
-                        $userName = $userNameTable->fetch();
-                        if ($_SESSION["admin"] == 1) {
-                            echo "<div class='nav'><a href='admin.php'>Admin controls</a></div>";
-                        }
-                        echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
-                        echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
-                        echo "<div class='nav'><a href='index.php'>Home</a></div>";
-                    } catch (PDOException $e) {
-                        echo "<p>Error: {$e->getMessage()}</p>";
-                    }
-                } else {
-                ?>
-                    <div class="nav"><a href="login.php">Login</a></div>
-
-                    <div class="nav"><a href="register.php">Register</a></div>
-
-                    <div class='nav'><a href='index.php'>Home</a></div>
-                <?php
-                }
-                ?>
-            </div>
-        </div>
+        <?php
+        require_once "header.php";
+        ?>
         <div class="posts-container">
             <?php
             try {
@@ -163,12 +134,11 @@ try {
                     $postCommentTable->execute();
                     $postComment = $postCommentTable->fetch();
 
-                    if($postComment['reply_id'] != NULL){
+                    if ($postComment['reply_id'] != NULL) {
                         echo "<p>This comment is a comment to <a href='post.php?id=" . $post['reply_id'] . "'><i>this comment</i></a></p>";
-                    }else if($postComment['reply_id'] == NULL){
+                    } else if ($postComment['reply_id'] == NULL) {
                         echo "<p>This comment is a comment to <a href='post.php?id=" . $post['reply_id'] . "'><i>this post</i></a></p>";
                     }
-                    
                 }
 
                 echo "</div>";

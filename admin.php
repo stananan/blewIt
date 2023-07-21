@@ -30,39 +30,9 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
 
 <body>
     <div class="container">
-        <div class="header-div">
-            <h1 class="header-title">Blew It</h1>
-            <div class="header-links">
-
-                <?php
-                if (isset($_SESSION["user"])) {
-                    try {
-                        $userNameTable = $dbh->prepare("SELECT `username` FROM bi_users WHERE :id = `id`");
-                        $userNameTable->bindValue(":id", $_SESSION["user"]);
-                        $userNameTable->execute();
-                        $userName = $userNameTable->fetch();
-                        if ($_SESSION["admin"] == 1) {
-                            echo "<div class='nav'><a href='admin.php'>Admin controls</a></div>";
-                        }
-                        echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
-                        echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
-                        echo "<div class='nav'><a href='index.php'>Home</a></div>";
-                    } catch (PDOException $e) {
-                        echo "<p>Error: {$e->getMessage()}</p>";
-                    }
-                } else {
-                ?>
-                    <div class="nav"><a href="login.php">Login</a></div>
-
-                    <div class="nav"><a href="register.php">Register</a></div>
-
-                    <div class='nav'><a href='index.php'>Home</a></div>
-                <?php
-                }
-                ?>
-            </div>
-
-        </div>
+        <?php
+        require_once "header.php";
+        ?>
 
 
         <div class="posts-container">
@@ -126,7 +96,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     </tr>
                     <?php
                     try {
-                        $sth = $dbh->prepare("SELECT * FROM bi_posts");
+                        $sth = $dbh->prepare("SELECT * FROM bi_posts ORDER BY `creation_time` DESC");
                         $sth->execute();
                         $posts = $sth->fetchAll();
                         foreach ($posts as $post) {
@@ -150,12 +120,12 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                             echo "<td><a href='profile.php?id=" . $post['author_id'] . "'>" . $post['author_id'] . "</td>";
 
                             echo "<td>" . $post['community_id'] . "</td>";
-                            if($post['admin_change'] != NULL){
+                            if ($post['admin_change'] != NULL) {
                                 echo "<td>Yes</td>";
-                            }else{
+                            } else {
                                 echo "<td>False</td>";
                             }
-                            
+
 
 
                             echo "<td><a href = \"deletepost.php?id={$postid}\">DELETE POST</a></td>";
@@ -197,8 +167,13 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                                 $contentSubstring .= "...";
                             }
                             echo "<td>" . $contentSubstring . "</td>";
+                            if ($sublewit['user_id'] == 0) {
+                                echo "<td>PRESET SUBLEWIT</td>";
+                            } else {
+                                echo "<td><a href='profile.php?id=" . $sublewit['user_id'] . "'>" . $sublewit['user_id'] . "</td>";
+                            }
 
-                            echo "<td><a href='profile.php?id=" . $sublewit['user_id'] . "'>" . $sublewit['user_id'] . "</td>";
+
                             echo "<td><a href = \"deletesublewit.php?id={$sublewitId}\">DELETE SUBLEWIT</a></td>";
 
                             echo "</tr>";

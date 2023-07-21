@@ -1,38 +1,57 @@
+<?php
+require "realconfig.php";
+session_start();
+$dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
+
+?>
+
 <!DOCTYPE html>
-<html lang="en-US">
+<html lang="en">
 
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
-    <?php
-    session_start();
+    <div class="container">
 
-    if (isset($_SESSION["message"])) {
-        echo '<p> ' . $_SESSION["message"] . '</p>';
-        unset($_SESSION["message"]);
-    }
-
-    ?>
-    <form action="loginsubmit.php" method="post">
-        <h3>Username:</h3>
         <?php
-        $username = "";
-        $admincode = "";
-
-        echo "<input type = 'text' name = 'username' required>";
-        echo "<h3>Password:</h3>";
-        echo "<input type ='password' name = 'password' required>";
+        require_once "header.php";
         ?>
-        <button type="submit">Login</button>
 
-        <!-- Add js frontend validation 
-        Username should only contain letters, numbers, and underscores.-->
-    </form>
+        <div class="posts-container">
+            <div class="post-div">
+                <?php
+
+                if (isset($_SESSION["message"])) {
+                    echo '<p> ' . $_SESSION["message"] . '</p>';
+                    unset($_SESSION["message"]);
+                }
+
+                ?>
+                <form action=" loginsubmit.php" method="post">
+                    <h3>Username:</h3>
+                    <?php
+                    $username = "";
+                    $admincode = "";
+
+                    echo "<input type = 'text' name = 'username' required>";
+                    echo "<h3>Password:</h3>";
+                    echo "<input type ='password' name = 'password' required>";
+                    ?>
+                    <button type="submit">Login</button>
+
+                    <!-- Add js frontend validation 
+Username should only contain letters, numbers, and underscores.-->
+                </form>
+            </div>
+        </div>
+    </div>
+
 
 </body>
-
 
 </html>
