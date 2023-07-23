@@ -43,6 +43,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     <tr>
                         <th>Id</th>
                         <th>Username</th>
+                        <th>Is Admin</th>
                         <th>Creation Time</th>
                         <th>Last Logged In</th>
 
@@ -51,7 +52,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     </tr>
                     <?php
                     try {
-                        $sth = $dbh->prepare("SELECT * FROM bi_users WHERE `is_admin` = 0;");
+                        $sth = $dbh->prepare("SELECT * FROM bi_users");
 
 
                         $sth->execute();
@@ -62,6 +63,12 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                             echo "<td>" . htmlspecialchars($user['id']) . "</td>";
                             echo "<td><a href='profile.php?id=" . htmlspecialchars($user['id']) . "'>" . htmlspecialchars($user['username']) . "</a></td>";
 
+                            if ($user['is_admin'] == 1) {
+                                echo "<td>Admin</td>";
+                            } else {
+                                echo "<td>User</td>";
+                            }
+
                             $datetime = strtotime($user["creation_time"]);
                             $formatted_date = date('m/d/Y h:i:s A', $datetime);
                             echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
@@ -70,7 +77,12 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                             $formatted_date = date('m/d/Y h:i:s A', $datetime);
                             echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
 
-                            echo "<td><a href = \"deleteuser.php?id={$userid}\">DELETE USER</a></td>";
+                            if ($user['is_admin'] == 0) {
+                                echo "<td><a href = \"deleteuser.php?id={$userid}\">DELETE USER</a></td>";
+                            } else {
+                                echo "<td></td>";
+                            }
+
                             echo "</tr>";
                         }
                     } catch (PDOException $e) {
