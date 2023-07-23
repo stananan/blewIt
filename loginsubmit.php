@@ -8,8 +8,8 @@ try {
         $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
 
-        $username = htmlspecialchars($_POST['username']);
-        $userpassword = htmlspecialchars($_POST['password']);
+        $username = $_POST['username'];
+        $userpassword = $_POST['password'];
 
         $sth = $dbh->prepare("SELECT * FROM `bi_users` WHERE :username = `username`;");
         $sth->bindValue(':username', $username);

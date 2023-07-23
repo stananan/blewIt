@@ -5,7 +5,7 @@ session_start();
 try {
     if (isset($_POST["username"]) && isset($_POST["password"])) {
 
-        if(strlen(htmlspecialchars($_POST["username"]))<3 || strlen(htmlspecialchars($_POST["password"]))<3){
+        if(strlen($_POST["username"])<3 || strlen($_POST["password"])<3){
             header("Location: register.php");
             $_SESSION["message"] = "Invalid Username or password. Too short";
             die();
@@ -22,12 +22,12 @@ try {
         $isadmin = 0;
 
         if (isset($_POST["admincode"])) {
-            if (password_verify(htmlspecialchars($_POST["admincode"]), adminCode)) {
+            if (password_verify($_POST["admincode"], adminCode)) {
                 $isadmin = 1;
             }
         }
-        $username = htmlspecialchars($_POST['username']);
-        $userpassword = password_hash(htmlspecialchars($_POST["password"]), PASSWORD_DEFAULT);
+        $username = $_POST['username'];
+        $userpassword = password_hash($_POST["password"], PASSWORD_DEFAULT);
 
 
         $sth = $dbh->prepare("INSERT INTO bi_users (`username`, `password`, `is_admin`, `creation_time`, `last_login_time`)
