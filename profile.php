@@ -57,7 +57,7 @@ try {
                     $userTable->execute();
                     $user = $userTable->fetch();
 
-                    echo "<h1>" . $user["username"] . "</h1>";
+                    echo "<h1>" . htmlspecialchars($user["username"]) . "</h1>";
                     if ($user["is_admin"] == 0) {
                         echo "<p>Bro is not an admin</p>";
                     } else {
@@ -91,15 +91,18 @@ try {
                     $sublewitTable->execute();
                     $sublewits = $sublewitTable->fetchAll();
                     foreach ($sublewits as $sublewit) {
-                        echo "<p>Bro is the founder of the " . $sublewit['name'] . " sublewit</p>";
+                        echo "<p>Bro is the founder of the " . htmlspecialchars($sublewit['name']) . " sublewit</p>";
                     }
 
-                    echo "<h2>Bro's posts</h2>";
+
                     $userPostTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :userId = `author_id`");
                     $userPostTable->bindValue(":userId", $_GET['id']);
                     $userPostTable->execute();
                     $userPosts = $userPostTable->fetchAll();
 
+                    if (!empty($userPosts)) {
+                        echo "<h2>Bro's posts</h2>";
+                    }
                     foreach ($userPosts as $userPost) {
                         $datetime = strtotime($userPost['creation_time']);
                         $formatted_date = date('m/d/Y h:i:s A', $datetime);

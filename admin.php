@@ -59,16 +59,16 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         foreach ($users as $user) {
                             $userid = $user['id'];
                             echo "<tr>";
-                            echo "<td>" . $user['id'] . "</td>";
-                            echo "<td><a href='profile.php?id=" . $user['id'] . "'>" . $user['username'] . "</a></td>";
+                            echo "<td>" . htmlspecialchars($user['id']) . "</td>";
+                            echo "<td><a href='profile.php?id=" . htmlspecialchars($user['id']) . "'>" . htmlspecialchars($user['username']) . "</a></td>";
 
                             $datetime = strtotime($user["creation_time"]);
                             $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                            echo "<td>" . $formatted_date . "</td>";
+                            echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
 
                             $datetime = strtotime($user["last_login_time"]);
                             $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                            echo "<td>" . $formatted_date . "</td>";
+                            echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
 
                             echo "<td><a href = \"deleteuser.php?id={$userid}\">DELETE USER</a></td>";
                             echo "</tr>";
@@ -102,22 +102,22 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         foreach ($posts as $post) {
                             $postid = $post['id'];
                             echo "<tr>";
-                            echo "<td>" . $post['id'] . "</td>";
+                            echo "<td>" . htmlspecialchars($post['id']) . "</td>";
 
-                            $contentSubstring = htmlspecialchars(substr($post['content'], 0, 30));
+                            $contentSubstring = substr($post['content'], 0, 30);
                             if (strlen($post['content']) > 30) {
                                 $contentSubstring .= "...";
                             }
-                            echo "<td><a href='post.php?id=" . $post['id'] . "'>" . $contentSubstring . "</a></td>";
+                            echo "<td><a href='post.php?id=" . $post['id'] . "'>" . htmlspecialchars($contentSubstring) . "</a></td>";
 
                             $type = "Post";
                             if ($post['reply_id'] != NULL) $type = "Comment";
                             echo  "<td>" . $type . "</td>";
                             $datetime = strtotime($post["creation_time"]);
                             $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                            echo "<td>" . $formatted_date . "</td>";
+                            echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
 
-                            echo "<td><a href='profile.php?id=" . $post['author_id'] . "'>" . $post['author_id'] . "</td>";
+                            echo "<td><a href='profile.php?id=" . htmlspecialchars($post['author_id']) . "'>" . htmlspecialchars($post['author_id']) . "</td>";
 
                             echo "<td>" . $post['community_id'] . "</td>";
                             if ($post['admin_change'] != NULL) {
@@ -158,19 +158,19 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         foreach ($sublewits as $sublewit) {
                             $sublewitId = $sublewit['id'];
                             echo "<tr>";
-                            echo "<td>" . $sublewit['id'] . "</td>";
+                            echo "<td>" . htmlspecialchars($sublewit['id']) . "</td>";
 
-                            echo "<td>" . $sublewit['name'] . "</td>";
+                            echo "<td>" . htmlspecialchars($sublewit['name']) . "</td>";
 
                             $contentSubstring = substr($sublewit['description'], 0, 30);
                             if (strlen($sublewit['description']) > 30) {
                                 $contentSubstring .= "...";
                             }
-                            echo "<td>" . $contentSubstring . "</td>";
+                            echo "<td>" . htmlspecialchars($contentSubstring) . "</td>";
                             if ($sublewit['user_id'] == 0) {
                                 echo "<td>PRESET SUBLEWIT</td>";
                             } else {
-                                echo "<td><a href='profile.php?id=" . $sublewit['user_id'] . "'>" . $sublewit['user_id'] . "</td>";
+                                echo "<td><a href='profile.php?id=" . htmlspecialchars($sublewit['user_id']) . "'>" . htmlspecialchars($sublewit['user_id']) . "</td>";
                             }
 
 

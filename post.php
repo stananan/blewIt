@@ -72,12 +72,12 @@ try {
 
                 echo "<div class='post-div'>";
 
-                echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
-                echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
+                echo "<h2 class='post-user'><a href='profile.php?id=" . htmlspecialchars($author['id']) . "'>" . htmlspecialchars($author['username']) . "</a></h2>";
+                echo "<p class='post-sublewit'><i>" . htmlspecialchars($sublewIt['name']) . "</i></p>";
 
 
                 //TODO: MAKE THE POST PAGE
-                echo "<p class='post-content'>" . $post['content'] . "</p>";
+                echo "<p class='post-content'>" . htmlspecialchars($post['content']) . "</p>";
 
 
 
@@ -89,6 +89,7 @@ try {
                 $interactionTable->bindValue(":postId", $post['id']);
                 $interactionTable->execute();
                 $interactions = $interactionTable->fetchAll();
+
                 foreach ($interactions as $interaction) {
                     if ($interaction['interaction_type'] == 1) {
                         $upvotes += 1;
@@ -98,35 +99,35 @@ try {
                 }
                 if (isset($_SESSION['user'])) {
 
-                    echo "<div class='bottomspan'><a href= 'interaction.php?post=" . $post['id'] . "&inter=1'>
+                    echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1'>
                     
                 <p class='post-upvotes'>Upvotes</p>
                 
-                <p class='post-upvotes-total'>" . $upvotes . "</p></a>
+                <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
                 </div>
                 
-                <div class='bottomspan'><a href= 'interaction.php?post=" . $post['id'] . "&inter=2'>
+                <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2'>
                     
                     <p class='post-downvotes'>Downvotes</p>
-                    <p class='post-downvotes-total'>" . $downvotes . "</p></a>
+                    <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
                 </div>";
                 } else {
                     echo "<div class='bottomspan'>
                     
                     <p class='post-upvotes'>Upvotes</p>
                     
-                    <p class='post-upvotes-total'>" . $upvotes . "</p>
+                    <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p>
                 </div>
                 
                 <div class='bottomspan'>
                     <p class='post-downvotes'>Downvotes</p>
                     
-                    <p class='post-downvotes-total'>" . $downvotes . "</p>
+                    <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p>
                 </div>";
                 }
                 $datetime = strtotime($post['creation_time']);
                 $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                echo "<p><i>" . $formatted_date . "</i></p>";
+                echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";
 
                 if ($post['reply_id'] != NULL) {
                     $postCommentTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :id = `id`");
@@ -135,9 +136,9 @@ try {
                     $postComment = $postCommentTable->fetch();
 
                     if ($postComment['reply_id'] != NULL) {
-                        echo "<p>This comment is a comment to <a href='post.php?id=" . $post['reply_id'] . "'><i>this comment</i></a></p>";
+                        echo "<p>This comment is a comment to <a href='post.php?id=" . htmlspecialchars($post['reply_id']) . "'><i>this comment</i></a></p>";
                     } else if ($postComment['reply_id'] == NULL) {
-                        echo "<p>This comment is a comment to <a href='post.php?id=" . $post['reply_id'] . "'><i>this post</i></a></p>";
+                        echo "<p>This comment is a comment to <a href='post.php?id=" . htmlspecialchars($post['reply_id']) . "'><i>this post</i></a></p>";
                     }
                 }
 
@@ -197,10 +198,10 @@ try {
 
                     echo "<div class='post-div'>";
 
-                    echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
-                    echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
+                    echo "<h2 class='post-user'><a href='profile.php?id=" . htmlspecialchars($author['id']) . "'>" . htmlspecialchars($author['username']) . "</a></h2>";
+                    echo "<p class='post-sublewit'><i>" . htmlspecialchars($sublewIt['name']) . "</i></p>";
 
-                    echo "<p class='post-content'>" . $comment['content'] . "<a href='post.php?id=" . $comment['id'] . "'> Click to see comment</a></p>";
+                    echo "<p class='post-content'>" . htmlspecialchars($comment['content']) . "<a href='post.php?id=" . htmlspecialchars($comment['id']) . "'> Click to see comment</a></p>";
 
 
                     $upvotes = 0;
@@ -221,17 +222,17 @@ try {
                     
                         <p class='post-upvotes'>Upvotes</p>
                         
-                        <p class='post-upvotes-total'>" . $upvotes . "</p>
+                        <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p>
                     </div>
                     
                     <div class='bottomspan'>
                         <p class='post-downvotes'>Downvotes</p>
                         
-                        <p class='post-downvotes-total'>" . $downvotes . "</p>
+                        <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p>
                     </div>";
                     $datetime = strtotime($comment['creation_time']);
                     $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                    echo "<p><i>" . $formatted_date . "</i></p>";
+                    echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";
 
                     echo "</div>";
                 }

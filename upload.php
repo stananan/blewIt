@@ -2,7 +2,7 @@
 require "realconfig.php";
 session_start();
 
-if (!isset($_SESSION['user'])) {
+if (!isset($_SESSION['user']) || !isset($_POST['upload-val']) || !isset($_POST['sublewit-val'])) {
     header("location: index.php");
 }
 try {
@@ -12,8 +12,8 @@ try {
                                 VALUES (:authorId, :content, NOW(), NULL, :communityId);");
 
     $postsTable->bindValue(':authorId', $_SESSION["user"]);
-    $postsTable->bindValue(':content', htmlspecialchars($_POST['upload-val']));
-    $postsTable->bindValue(':communityId', htmlspecialchars($_POST['sublewit-val']));
+    $postsTable->bindValue(':content', $_POST['upload-val']);
+    $postsTable->bindValue(':communityId', $_POST['sublewit-val']);
     $postsTable->execute();
     $_SESSION["upload-error"] = false;
 } catch (PDOException $e) {

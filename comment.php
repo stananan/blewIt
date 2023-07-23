@@ -1,11 +1,5 @@
 <?php
 
-// var_dump($_POST['comment-val']);
-// var_dump($_SESSION['user']);
-
-// print_r($_POST);
-
-
 require "realconfig.php";
 session_start();
 

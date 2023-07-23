@@ -140,10 +140,10 @@ if (!isset($_SESSION['load-more'])) {
 
                     echo "<div class='post-div'>";
 
-                    echo "<h2 class='post-user'><a href='profile.php?id=" . $author['id'] . "'>" . $author['username'] . "</a></h2>";
-                    echo "<p class='post-sublewit'><i>" . $sublewIt['name'] . "</i></p>";
+                    echo "<h2 class='post-user'><a href='profile.php?id=" . htmlspecialchars($author['id']) . "'>" . htmlspecialchars($author['username']) . "</a></h2>";
+                    echo "<p class='post-sublewit'><i>" . htmlspecialchars($sublewIt['name']) . "</i></p>";
 
-                    echo "<p class='post-content'>" . $post['content'] . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
+                    echo "<p class='post-content'>" . htmlspecialchars($post['content']) . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
 
 
                     $upvotes = 0;
@@ -164,17 +164,17 @@ if (!isset($_SESSION['load-more'])) {
                     
                         <p class='post-upvotes'>Upvotes</p>
                         
-                        <p class='post-upvotes-total'>" . $upvotes . "</p>
+                        <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p>
                     </div>
                     
                     <div class='bottomspan'>
                         <p class='post-downvotes'>Downvotes</p>
                         
-                        <p class='post-downvotes-total'>" . $downvotes . "</p>
+                        <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p>
                     </div>";
                     $datetime = strtotime($post['creation_time']);
                     $formatted_date = date('m/d/Y h:i:s A', $datetime);
-                    echo "<p><i>" . $formatted_date . "</i></p>";
+                    echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";
                     if ($post['admin_change'] != NULL) {
                         echo "<p><i>This post was modified by an admin</i></p>";
                     }
