@@ -20,9 +20,9 @@ try {
                                 VALUES (:authorId, :content, NOW(), :replyId, :communityId);");
 
     $postsTable->bindValue(':authorId', $_SESSION["user"]);
-    $postsTable->bindValue(':content', htmlspecialchars($_POST['comment-val']));
-    $postsTable->bindValue(':communityId', htmlspecialchars($_POST['sublewit-val']));
-    $postsTable->bindValue(':replyId', htmlspecialchars($_POST['reply-val']));
+    $postsTable->bindValue(':content', $_POST['comment-val']);
+    $postsTable->bindValue(':communityId', $_POST['sublewit-val']);
+    $postsTable->bindValue(':replyId', $_POST['reply-val']);
     $postsTable->execute();
     $_SESSION["comment-error"] = false;
 } catch (PDOException $e) {

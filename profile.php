@@ -16,7 +16,7 @@ try {
     $check = false;
     foreach ($usersCheck as $id) {
 
-        if ($id['id'] == htmlspecialchars($_GET['id'])) {
+        if ($id['id'] == $_GET['id']) {
             $check = true;
         }
     }

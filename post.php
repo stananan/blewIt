@@ -17,7 +17,7 @@ try {
     $check = false;
     foreach ($postsCheck as $id) {
 
-        if ($id['id'] == htmlspecialchars($_GET['id'])) {
+        if ($id['id'] == $_GET['id']) {
             $check = true;
         }
     }
@@ -29,7 +29,7 @@ try {
         exit();
     }
     $postsTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :getId = `id`;");
-    $postsTable->bindValue(':getId', htmlspecialchars($_GET['id']));
+    $postsTable->bindValue(':getId', $_GET['id']);
     $postsTable->execute();
 
     $post = $postsTable->fetch();

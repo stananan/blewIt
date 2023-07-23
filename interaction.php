@@ -10,7 +10,7 @@ if (!isset($_SESSION['user']) || !isset($_GET["post"]) || !isset($_GET["inter"])
     try {
         $userCheckTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :userId = `user_id` AND :postId = `post_id`;");
         $userCheckTable->bindValue(":userId", $_SESSION['user']);
-        $userCheckTable->bindValue(":postId", htmlspecialchars($_GET['post']));
+        $userCheckTable->bindValue(":postId", $_GET['post']);
         $userCheckTable->execute();
         $userCheck = $userCheckTable->fetch();
 
@@ -18,19 +18,19 @@ if (!isset($_SESSION['user']) || !isset($_GET["post"]) || !isset($_GET["inter"])
             $insertTable = $dbh->prepare("INSERT INTO `bi_interactions` (`user_id`, `post_id`, `interaction_type`)
             VALUES (:userId, :postId, :interaction);");
             $insertTable->bindValue(":userId",  $_SESSION['user']);
-            $insertTable->bindValue(":postId", htmlspecialchars($_GET['post']));
-            $insertTable->bindValue(":interaction", htmlspecialchars($_GET['inter']));
+            $insertTable->bindValue(":postId", $_GET['post']);
+            $insertTable->bindValue(":interaction", $_GET['inter']);
             $insertTable->execute();
         } else {
-            if ($userCheck['interaction_type'] == 1 && htmlspecialchars($_GET['inter']) == 2) {
+            if ($userCheck['interaction_type'] == 1 && $_GET['inter'] == 2) {
                 $updateTable = $dbh->prepare("UPDATE `bi_interactions` SET `interaction_type` = 2 WHERE :userId = `user_id` AND :postId = `post_id`;");
                 $updateTable->bindValue(":userId", $_SESSION['user']);
-                $updateTable->bindValue(":postId", htmlspecialchars($_GET['post']));
+                $updateTable->bindValue(":postId", $_GET['post']);
                 $updateTable->execute();
-            } else if ($userCheck['interaction_type'] == 2 && htmlspecialchars($_GET['inter']) == 1) {
+            } else if ($userCheck['interaction_type'] == 2 && $_GET['inter'] == 1) {
                 $updateTable = $dbh->prepare("UPDATE `bi_interactions` SET `interaction_type` = 1 WHERE :userId = `user_id` AND :postId = `post_id`;");
                 $updateTable->bindValue(":userId", $_SESSION['user']);
-                $updateTable->bindValue(":postId", htmlspecialchars($_GET['post']));
+                $updateTable->bindValue(":postId", $_GET['post']);
                 $updateTable->execute();
             }
         }

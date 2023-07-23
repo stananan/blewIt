@@ -104,7 +104,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                             echo "<tr>";
                             echo "<td>" . $post['id'] . "</td>";
 
-                            $contentSubstring = substr($post['content'], 0, 30);
+                            $contentSubstring = htmlspecialchars(substr($post['content'], 0, 30));
                             if (strlen($post['content']) > 30) {
                                 $contentSubstring .= "...";
                             }
