@@ -141,6 +141,9 @@ try {
                         echo "<p>This comment is a comment to <a href='post.php?id=" . htmlspecialchars($post['reply_id']) . "'><i>this post</i></a></p>";
                     }
                 }
+                if ($post['admin_change'] != NULL) {
+                    echo "<p><i>This post was modified by an admin</i></p>";
+                }
 
                 echo "</div>";
             } catch (PDOException $e) {
@@ -233,6 +236,9 @@ try {
                     $datetime = strtotime($comment['creation_time']);
                     $formatted_date = date('m/d/Y h:i:s A', $datetime);
                     echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";
+                    if ($comment['admin_change'] != NULL) {
+                        echo "<p><i>This post was modified by an admin</i></p>";
+                    }
 
                     echo "</div>";
                 }

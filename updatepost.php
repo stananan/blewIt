@@ -42,7 +42,7 @@ try {
     $postTable->execute();
     $post = $postTable->fetch();
     echo "<form action='updatepostconfirm.php?id=" . htmlspecialchars($_GET['id']) . "' method='post'>";
-    echo "<textarea name='content-val' id='' cols='30' rows='10'>" . htmlspecialchars($post['content']) . "</textarea>";
+    echo "<textarea name='content-val' id='' cols='30' rows='10' required style='resize: none;' maxlength='1024'>" . htmlspecialchars($post['content']) . "</textarea>";
     echo "<button type='submit'>Submit</button>";
     echo "</form>"
 ?>

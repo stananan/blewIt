@@ -3,7 +3,7 @@ require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
-if (!isset($_SESSION['user']) || !isset($_GET['search-val'])) {
+if (!isset($_SESSION['user']) || !isset($_GET['search-val']) || empty($_GET['search-val'])) {
     header("Location: index.php");
 }
 ?>
