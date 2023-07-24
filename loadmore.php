@@ -1,8 +1,11 @@
 <?php
+//Load more backend
 session_start();
 
-$_SESSION['load-more'] += 5;
+if ($_GET['page'] == 0 && isset($_SESSION['load-more-index'])) {
+    $_SESSION['load-more-index'] += 5;
+    header("Location: index.php");
+}
 
-echo $_SESSION['load-more'];
 
 header("Location: index.php");

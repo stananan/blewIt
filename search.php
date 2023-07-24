@@ -107,11 +107,11 @@ if (!isset($_SESSION['user']) || !isset($_GET['search-val']) || empty($_GET['sea
                     <tr>
                         <th>Sublewits</th>
                         <th>Description</th>
-                        <th>Sublewit Link (NOT WORKING)</th>
+                        <th>Sublewit Link</th>
                     </tr>
                     <?php
                     try {
-                        $sublewitTable = $dbh->prepare("SELECT `community_id`, `name`, `description` FROM bi_communities WHERE `name` LIKE :search");
+                        $sublewitTable = $dbh->prepare("SELECT `id`, `name`, `description` FROM bi_communities WHERE `name` LIKE :search");
                         $search = "%" . $_GET['search-val'] . "%";
                         $sublewitTable->bindValue(":search", $search);
                         $sublewitTable->execute();
@@ -129,7 +129,7 @@ if (!isset($_SESSION['user']) || !isset($_GET['search-val']) || empty($_GET['sea
                             echo "<tr>";
                             echo "<td>" . $sublewits['name'] . "</td>";
                             echo "<td>" . $sublewits['description'] . "</td>";
-                            echo "<td><a href = \" selectedsublewit.php?id={$sublewits['community_id']}\">Sublewit Link</a></td>";
+                            echo "<td><a href = \" sublewit.php?id={$sublewits['id']}\">Sublewit Link</a></td>";
                             echo "</tr>";
                         }
                     } catch (PDOException $e) {

@@ -1,3 +1,4 @@
+<!-- Header Code -->
 <div class="header-div">
     <h1 class="header-title">Blew It</h1>
     <div class="header-links">
@@ -17,24 +18,23 @@
                 $sth = $dbh->prepare("SELECT * FROM bi_communities");
                 $sth->execute();
                 $communities = $sth->fetchAll();
-                if (isset( $_SESSION['user'])){
+                if (isset($_SESSION['user'])) {
                     echo "<div class='nav'>";
                     echo "<div class='dropdown'>";
-                        echo "<button type='button' class='dropbutton'>Communities</button>";
-                        echo "<div class='dropdowncontent'>";
-                            foreach($communities as $community){
-                                $id = $community['community_id'];
-                                $name = $community['name'];
-                                echo "<a href = \" selectedsublewit.php?id={$id}\">{$name}</a>";
-                            }
-                        echo" </div>";
+                    echo "<button type='button' class='dropbutton'>Communities</button>";
+                    echo "<div class='dropdowncontent'>";
+                    foreach ($communities as $community) {
+                        $id = $community['id'];
+                        $name = $community['name'];
+                        echo "<a href = \" sublewit.php?id={$id}\">{$name}</a>";
+                    }
+                    echo " </div>";
                     echo "</div>";
-                echo "</div>";
-                echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
-                echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
-                echo "<div class='nav'><a href='index.php'>Home</a></div>";
+                    echo "</div>";
+                    echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
+                    echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
+                    echo "<div class='nav'><a href='index.php'>Home</a></div>";
                 }
-                
             } catch (PDOException $e) {
                 echo "<p>Error: {$e->getMessage()}</p>";
             }

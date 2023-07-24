@@ -1,4 +1,5 @@
 <?php
+//Frontend Login Page
 require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);

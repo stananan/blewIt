@@ -1,4 +1,5 @@
 <?php
+//Backend for login
 require 'realconfig.php';
 session_start();
 

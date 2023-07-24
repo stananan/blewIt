@@ -8,7 +8,7 @@ if (!isset(($_GET['id']))) {
     echo "Error 404: Page not found";
     exit();
 }
-
+//Checking valid GET
 try {
 
     $postsTableCheck = $dbh->prepare("SELECT `id` from `bi_posts`");
@@ -54,6 +54,7 @@ try {
         <?php
         require_once "header.php";
         ?>
+        <!-- Displaying Post -->
         <div class="posts-container">
             <?php
             try {
@@ -65,7 +66,7 @@ try {
                 $authorName->execute();
                 $author = $authorName->fetch();
 
-                $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `community_id`;");
+                $sublewItName = $dbh->prepare("SELECT * FROM `bi_communities` WHERE :postSublewit = `id`;");
                 $sublewItName->bindValue(':postSublewit', $post['community_id']);
                 $sublewItName->execute();
                 $sublewIt = $sublewItName->fetch();
@@ -73,7 +74,7 @@ try {
                 echo "<div class='post-div'>";
 
                 echo "<h2 class='post-user'><a href='profile.php?id=" . htmlspecialchars($author['id']) . "'>" . htmlspecialchars($author['username']) . "</a></h2>";
-                echo "<p class='post-sublewit'><i>" . htmlspecialchars($sublewIt['name']) . "</i></p>";
+                echo "<p class='post-sublewit'><a href='sublewit.php?id=" . htmlspecialchars($sublewIt['id']) . "'><i>" . htmlspecialchars($sublewIt['name']) . "</i></a></p>";
 
 
                 //TODO: MAKE THE POST PAGE
@@ -194,7 +195,7 @@ try {
                     $authorName->execute();
                     $author = $authorName->fetch();
 
-                    $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `community_id`;");
+                    $sublewItName = $dbh->prepare("SELECT * FROM `bi_communities` WHERE :postSublewit = `id`;");
                     $sublewItName->bindValue(':postSublewit', $comment['community_id']);
                     $sublewItName->execute();
                     $sublewIt = $sublewItName->fetch();
@@ -202,7 +203,7 @@ try {
                     echo "<div class='post-div'>";
 
                     echo "<h2 class='post-user'><a href='profile.php?id=" . htmlspecialchars($author['id']) . "'>" . htmlspecialchars($author['username']) . "</a></h2>";
-                    echo "<p class='post-sublewit'><i>" . htmlspecialchars($sublewIt['name']) . "</i></p>";
+                    echo "<p class='post-sublewit'><a href='sublewit.php?id=" . htmlspecialchars($sublewIt['id']) . "'><i>" . htmlspecialchars($sublewIt['name']) . "</i></a></p>";
 
                     echo "<p class='post-content'>" . htmlspecialchars($comment['content']) . "<a href='post.php?id=" . htmlspecialchars($comment['id']) . "'> Click to see comment</a></p>";
 
@@ -237,7 +238,7 @@ try {
                     $formatted_date = date('m/d/Y h:i:s A', $datetime);
                     echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";
                     if ($comment['admin_change'] != NULL) {
-                        echo "<p><i>This post was modified by an admin</i></p>";
+                        echo "<p><i>This comment was modified by an admin</i></p>";
                     }
 
                     echo "</div>";

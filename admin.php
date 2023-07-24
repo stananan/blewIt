@@ -37,6 +37,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
 
 
         <div class="posts-container">
+            <!-- User Admin Panel -->
             <div class="post-div">
                 <h2>Users</h2>
                 <table>
@@ -92,6 +93,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     ?>
                 </table>
             </div>
+            <!-- Posts Admin Panel -->
             <div class="post-div">
                 <h2>Posts</h2>
                 <table>
@@ -152,6 +154,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     ?>
                 </table>
             </div>
+            <!-- Sublewit Admin Panel -->
             <div class="post-div">
                 <h2>Sublewits</h2>
                 <table>
@@ -168,11 +171,11 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         $sth->execute();
                         $sublewits = $sth->fetchAll();
                         foreach ($sublewits as $sublewit) {
-                            $sublewitId = $sublewit['community_id'];
+                            $sublewitId = htmlspecialchars($sublewit['id']);
                             echo "<tr>";
-                            echo "<td>" . htmlspecialchars($sublewit['community_id']) . "</td>";
+                            echo "<td>" . htmlspecialchars($sublewit['id']) . "</td>";
 
-                            echo "<td>" . htmlspecialchars($sublewit['name']) . "</td>";
+                            echo "<td><a href='sublewit.php?id=" . htmlspecialchars($sublewit['id']) . "'>" . htmlspecialchars($sublewit['name']) . "</a></td>";
 
                             $contentSubstring = substr($sublewit['description'], 0, 30);
                             if (strlen($sublewit['description']) > 30) {

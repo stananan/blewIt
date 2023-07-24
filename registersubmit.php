@@ -1,17 +1,17 @@
 <?php
 require 'realconfig.php';
 session_start();
-//we have to dedicate a day to some backend validation
+//Backend for Registering
 try {
     if (isset($_POST["username"]) && isset($_POST["password"])) {
 
-        if(strlen($_POST["username"])<3 || strlen($_POST["password"])<3){
+        if (strlen($_POST["username"]) < 3 || strlen($_POST["password"]) < 3) {
             header("Location: register.php");
             $_SESSION["message"] = "Invalid Username or password. Too short";
             die();
         }
 
-        if(!ctype_alpha($_POST["username"])){
+        if (!ctype_alpha($_POST["username"])) {
             header("Location: register.php");
             $_SESSION["message"] = "Invalid Username. No numbers or special characters";
             die();
@@ -32,7 +32,7 @@ try {
 
         $sth = $dbh->prepare("INSERT INTO bi_users (`username`, `password`, `is_admin`, `creation_time`, `last_login_time`)
             VALUES (:username, :userpassword, :isadmin, NOW(), NOW());");
-        
+
         $sth->bindValue(':username', $username);
         $sth->bindValue(":userpassword", $userpassword);
         $sth->bindValue(":isadmin", $isadmin);

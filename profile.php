@@ -9,6 +9,7 @@ if (!isset(($_GET['id']))) {
     exit();
 }
 
+//Checking valid get
 try {
     $usersTableCheck = $dbh->prepare("SELECT `id` from `bi_users`");
     $usersTableCheck->execute();
@@ -48,6 +49,7 @@ try {
         <?php
         require_once "header.php";
         ?>
+        <!-- Profile Display -->
         <div class="posts-container">
             <div class="post-div">
                 <?php

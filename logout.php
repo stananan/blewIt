@@ -1,4 +1,5 @@
 <?php
+//Logout php
 require 'realconfig.php';
 session_start();
 

@@ -13,7 +13,7 @@ CREATE TABLE bi_users (
 );
 
 CREATE TABLE bi_communities (
-    community_id BIGINT(20) NOT NULL AUTO_INCREMENT,
+    id BIGINT(20) NOT NULL AUTO_INCREMENT,
     user_id BIGINT(20) NOT NULL DEFAULT 0,
     name CHAR(30) NOT NULL,
     description VARCHAR(300) NOT NULL,

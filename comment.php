@@ -1,5 +1,5 @@
 <?php
-
+//Backend for creating comments
 require "realconfig.php";
 session_start();
 

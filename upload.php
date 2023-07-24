@@ -1,6 +1,7 @@
 <?php
 require "realconfig.php";
 session_start();
+// Backend for uploading posts
 
 if (!isset($_SESSION['user']) || !isset($_POST['upload-val']) || !isset($_POST['sublewit-val'])) {
     header("location: index.php");

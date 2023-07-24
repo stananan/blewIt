@@ -1,4 +1,5 @@
 <?php
+//Backend for deleting sublewits
 require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
@@ -20,21 +21,13 @@ try {
         $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `post_id` = :postId;");
         $interactionTable->bindValue(':postId', $post['id']);
         $interactionTable->execute();
-
-        //scratch this idea
-        //deletes all comments from his post
-        // $commentsTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `reply_id` = :postId;");
-        // $commentsTable->bindValue(':postId', $post['id']);
-        // $commentsTable->execute();
-
-
     }
 
     $postTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `community_id` = :communityId;");
     $postTable->bindValue(':communityId', intval($_GET['id']));
     $postTable->execute();
 
-    $sublewIt = $dbh->prepare("DELETE FROM `bi_communities` WHERE `community_id` = :id;");
+    $sublewIt = $dbh->prepare("DELETE FROM `bi_communities` WHERE `id` = :id;");
     $sublewIt->bindValue(':id', intval($_GET['id']));
     $sublewIt->execute();
 

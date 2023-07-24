@@ -1,4 +1,5 @@
 <?php
+//Backend for inserting interactions for posts
 require_once "realconfig.php";
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 session_start();
