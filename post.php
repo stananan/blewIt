@@ -65,7 +65,7 @@ try {
                 $authorName->execute();
                 $author = $authorName->fetch();
 
-                $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `id`;");
+                $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `community_id`;");
                 $sublewItName->bindValue(':postSublewit', $post['community_id']);
                 $sublewItName->execute();
                 $sublewIt = $sublewItName->fetch();
@@ -194,7 +194,7 @@ try {
                     $authorName->execute();
                     $author = $authorName->fetch();
 
-                    $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `id`;");
+                    $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `community_id`;");
                     $sublewItName->bindValue(':postSublewit', $comment['community_id']);
                     $sublewItName->execute();
                     $sublewIt = $sublewItName->fetch();

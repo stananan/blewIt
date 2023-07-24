@@ -34,7 +34,7 @@ try {
     $postTable->bindValue(':communityId', intval($_GET['id']));
     $postTable->execute();
 
-    $sublewIt = $dbh->prepare("DELETE FROM `bi_communities` WHERE `id` = :id;");
+    $sublewIt = $dbh->prepare("DELETE FROM `bi_communities` WHERE `community_id` = :id;");
     $sublewIt->bindValue(':id', intval($_GET['id']));
     $sublewIt->execute();
 

@@ -168,9 +168,9 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         $sth->execute();
                         $sublewits = $sth->fetchAll();
                         foreach ($sublewits as $sublewit) {
-                            $sublewitId = $sublewit['id'];
+                            $sublewitId = $sublewit['community_id'];
                             echo "<tr>";
-                            echo "<td>" . htmlspecialchars($sublewit['id']) . "</td>";
+                            echo "<td>" . htmlspecialchars($sublewit['community_id']) . "</td>";
 
                             echo "<td>" . htmlspecialchars($sublewit['name']) . "</td>";
 
@@ -197,7 +197,6 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                     ?>
                 </table>
             </div>
-
         </div>
     </div>
 </body>

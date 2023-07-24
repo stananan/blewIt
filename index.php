@@ -82,7 +82,7 @@ if (!isset($_SESSION['load-more'])) {
 
                                 $communitiesOptions = $communitiesTable->fetchAll();
                                 foreach ($communitiesOptions as $communitiesOption) {
-                                    echo "<option value='" . $communitiesOption['id'] . "'>" . $communitiesOption['name'] . "</option>";
+                                    echo "<option value='" . $communitiesOption['community_id'] . "'>" . $communitiesOption['name'] . "</option>";
                                 }
                             } catch (PDOException $e) {
                                 echo "<p>Error: {$e->getMessage()}</p>";
@@ -133,7 +133,7 @@ if (!isset($_SESSION['load-more'])) {
                     $authorName->execute();
                     $author = $authorName->fetch();
 
-                    $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `id`;");
+                    $sublewItName = $dbh->prepare("SELECT `name` FROM `bi_communities` WHERE :postSublewit = `community_id`;");
                     $sublewItName->bindValue(':postSublewit', $post['community_id']);
                     $sublewItName->execute();
                     $sublewIt = $sublewItName->fetch();
