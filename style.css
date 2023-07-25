@@ -161,7 +161,7 @@ select {
     border: 1px solid black;
     display: inline-block;
     width: 100%;
-
+    padding:25px;
 }
 
 
