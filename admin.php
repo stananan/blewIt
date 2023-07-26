@@ -96,7 +96,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                 </table>
             </div>
             <!-- Posts Admin Panel -->
-            <div class="post-div">
+            <div class="post-div" id="tableofposts">
                 <h2>Posts</h2>
                 <table>
                     <tr>

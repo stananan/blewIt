@@ -24,23 +24,24 @@ if (!isset($_SESSION['load-more-index'])) {
     <link rel="icon" type="image/x-icon" href="images/reddit-logo.ico">
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script type="text/javascript"
+        src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
     <script>
-        //SAVE THE SCROLL POSISITON
-        $(document).ready(function() {
+    //SAVE THE SCROLL POSISITON
+    $(document).ready(function() {
 
-            if ($.cookie("scroll") !== null) {
-                $(document).scrollTop($.cookie("scroll"));
-            }
+        if ($.cookie("scroll") !== null) {
+            $(document).scrollTop($.cookie("scroll"));
+        }
 
-            $('.nav, .upload-button, .bottomspan').on("click", function() {
+        $('.nav, .upload-button, .bottomspan').on("click", function() {
 
-                $.cookie("scroll", $(document).scrollTop());
-
-            });
+            $.cookie("scroll", $(document).scrollTop());
 
         });
+
+    });
     </script>
 
 </head>
@@ -49,6 +50,24 @@ if (!isset($_SESSION['load-more-index'])) {
     <?php
     require_once "header.php";
     ?>
+
+    <div class = "sidebar">
+        <h3>Top 10 sublewits</h3>
+        <ol>
+        <?php
+        $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
+        JOIN bi_posts p ON c.id = p.community_id 
+        GROUP BY p.community_id 
+        ORDER BY pcount DESC LIMIT 10;");
+        $sth->execute();
+        $toptensublewits = $sth->fetchAll();
+        foreach ($toptensublewits as $toptensublewit){
+            $toptensublewitid = $toptensublewit['id'];
+            echo "<li><a href = \" sublewit.php?id={$toptensublewitid}\">{$toptensublewit['name']}</a></li>";
+        }
+        ?>
+        </ol>
+    </div>
     <div class="container">
 
         <!-- HEADER -->
@@ -68,15 +87,16 @@ if (!isset($_SESSION['load-more-index'])) {
                 unset($_SESSION['sublewit-error']);
             }
         ?>
-            <div class="create-div">
+        <div class="create-div">
 
-                <div class="upload-div">
-                    <form action="upload.php" method="post" class="upload-form">
-                        <h2>Create a Post</h2>
-                        <textarea name="upload-val" id="upload-text" cols="10" rows="5" placeholder="Text" required style="resize: none;" maxlength="1024"></textarea>
-                        <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
-                        <select name="sublewit-val" id="upload-sublewit">
-                            <?php
+            <div class="upload-div">
+                <form action="upload.php" method="post" class="upload-form">
+                    <h2>Create a Post</h2>
+                    <textarea name="upload-val" id="upload-text" cols="10" rows="5" placeholder="Text" required
+                        style="resize: none;" maxlength="1024"></textarea>
+                    <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
+                    <select name="sublewit-val" id="upload-sublewit">
+                        <?php
 
                             try {
 
@@ -93,27 +113,29 @@ if (!isset($_SESSION['load-more-index'])) {
 
                             ?>
 
-                        </select>
+                    </select>
 
-                        <button class="upload-button" type="submit">Post</button>
-                    </form>
-                </div>
-
-                <div class="sublewit-div">
-                    <form action="uploadsublewit.php" method="post" class="upload-form">
-                        <h2>Create a Sublewit</h2>
-                        <input type="text" id="sublewit-text" name="sublewit-val" required placeholder="Genre" maxlength="20">
-                        <textarea name="desc-val" id="desc-text" cols="10" rows="5" placeholder="Give a brief description" required style="resize: none;" maxlength="300"></textarea>
-                        <button class="upload-button" type="submit">Create</button>
-                    </form>
-                </div>
+                    <button class="upload-button" type="submit">Post</button>
+                </form>
             </div>
+
+            <div class="sublewit-div">
+                <form action="uploadsublewit.php" method="post" class="upload-form">
+                    <h2>Create a Sublewit</h2>
+                    <input type="text" id="sublewit-text" name="sublewit-val" required placeholder="Genre"
+                        maxlength="20">
+                    <textarea name="desc-val" id="desc-text" cols="10" rows="5" placeholder="Give a brief description"
+                        required style="resize: none;" maxlength="300"></textarea>
+                    <button class="upload-button" type="submit">Create</button>
+                </form>
+            </div>
+        </div>
 
         <?php
         }
         ?>
 
-
+            
 
         <!-- POSTS -->
         <div class="posts-container">
@@ -217,9 +239,9 @@ if (!isset($_SESSION['load-more-index'])) {
 
             if ($_SESSION['load-more-index'] < $count) {
             ?>
-                <form action="loadmore.php">
-                    <button class="upload-button load-more" type="submit">Load More</button>
-                </form>
+            <form action="loadmore.php">
+                <button class="upload-button load-more" type="submit">Load More</button>
+            </form>
             <?php
             }
             ?>

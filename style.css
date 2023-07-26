@@ -183,6 +183,14 @@ textarea {
 
 }
 
+.sidebar{
+    width:12%;
+    height:fit-content;
+    padding: 25px;
+    border:1px solid black;
+    position:fixed;
+}
+
 .upload-div,
 .sublewit-div {
     border: 1px solid black;
@@ -194,7 +202,9 @@ textarea {
 }
 
 
-
+ol li{
+   padding:10px; 
+}
 #upload-text,
 #desc-text {
     font-size: 150%;
@@ -230,4 +240,8 @@ textarea {
 
 .error.bad {
     color: red;
+}
+
+#tableofposts{
+    width:fit-content;
 }
