@@ -186,7 +186,7 @@ textarea {
 .sidebar{
     width:12%;
     height:fit-content;
-    padding: 25px;
+    padding: 10px;
     border:1px solid black;
     position:fixed;
 }
