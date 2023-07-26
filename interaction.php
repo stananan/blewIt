@@ -4,7 +4,7 @@ require_once "realconfig.php";
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 session_start();
 
-if (!isset($_SESSION['user']) || !isset($_GET["post"]) || !isset($_GET["inter"])) {
+if (!isset($_SESSION['user']) || !isset($_GET["post"]) || !isset($_GET["inter"]) || !isset($_GET['page'])) {
     header("location: index.php");
 } else {
 
@@ -35,7 +35,14 @@ if (!isset($_SESSION['user']) || !isset($_GET["post"]) || !isset($_GET["inter"])
                 $updateTable->execute();
             }
         }
-        header("Location: post.php?id=" . htmlspecialchars($_GET['post']) . "");
+
+        if ($_GET['page'] == "post") {
+            header("Location: post.php?id=" . htmlspecialchars($_GET['post']) . "");
+        } else if ($_GET['page'] == "sublewit" && isset($_GET['sublewit'])) {
+            header("Location: sublewit.php?id=" . $_GET['sublewit'] . "");
+        } else {
+            header("Location: index.php");
+        }
     } catch (PDOException $e) {
 
 

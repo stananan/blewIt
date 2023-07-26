@@ -14,6 +14,8 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
     <title>Sublewit</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/reddit-logo.ico">
+
 </head>
 <?php
 
@@ -49,6 +51,15 @@ try {
         <?php
         echo "<h1 class='center'>" .  htmlspecialchars($communityname) . "</h1>";
         echo "<h2 class='center'>" . htmlspecialchars($communityinfo) . "</h2>";
+
+        if ($community['user_id'] != 0) {
+            $userTable = $dbh->prepare("SELECT username FROM bi_users WHERE id = :id");
+            $userTable->bindValue(":id", $community['user_id']);
+            $userTable->execute();
+            $userName = $userTable->fetch();
+
+            echo "<h2 class='center'><a href='profile.php?id=" . $community['user_id'] . "'>Sublewit created by <i>" . $userName['username'] . "</i></a></h2>";
+        }
         ?>
 
         <div class="posts-container">
@@ -57,34 +68,58 @@ try {
                 if (!empty($sublewits)) {
 
 
-                    foreach ($sublewits as $data) {
+                    foreach ($sublewits as $post) {
 
-                        $postid = $data['id'];
+
+                        $authorName = $dbh->prepare("SELECT * FROM `bi_users` WHERE :postAuthorId = `id`;");
+                        $authorName->bindValue(':postAuthorId', $post['author_id']);
+                        $authorName->execute();
+                        $author = $authorName->fetch();
+
+                        $sublewItName = $dbh->prepare("SELECT * FROM `bi_communities` WHERE :postSublewit = `id`;");
+                        $sublewItName->bindValue(':postSublewit', $post['community_id']);
+                        $sublewItName->execute();
+                        $sublewIt = $sublewItName->fetch();
+
+                        echo "<div class='post-div'>";
+
+                        echo "<h2 class='post-user'><a href='profile.php?id=" . htmlspecialchars($author['id']) . "'>" . htmlspecialchars($author['username']) . "</a></h2>";
+                        echo "<p class='post-sublewit'><a href='sublewit.php?id=" . htmlspecialchars($sublewIt['id']) . "'><i>" . htmlspecialchars($sublewIt['name']) . "</i></a></p>";
+
+                        echo "<p class='post-content'>" . htmlspecialchars($post['content']) . "<a href='post.php?id=" . $post['id'] . "'> Click to see post</a></p>";
+
 
                         $upvotes = 0;
                         $downvotes = 0;
-                        echo "<div class='post-div'>";
 
-                        echo "<h2 class='post-user'><a href='profile.php?id=" . htmlspecialchars($data['author_id']) . "'>" . htmlspecialchars($data['username']) . "</a></h2>";
-                        echo "<p class='post-sublewit'><i>" . htmlspecialchars($communityname) . "</i></p>";
-
-                        echo "<p class='post-content'>" . htmlspecialchars($data['content']) . "<a href='post.php?id=" . $data['id'] . "'> Click to see post</a></p>";
-
-
-
-                        $interactionTable = $dbh->prepare("SELECT `interaction_type`, COUNT(`post_id`) as icnt FROM `bi_interactions` WHERE :postId = `post_id` GROUP BY `interaction_type`;");
-                        $interactionTable->bindValue(":postId", $postid);
+                        $interactionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id`;");
+                        $interactionTable->bindValue(":postId", $post['id']);
                         $interactionTable->execute();
                         $interactions = $interactionTable->fetchAll();
                         foreach ($interactions as $interaction) {
                             if ($interaction['interaction_type'] == 1) {
-                                $upvotes = $interaction["icnt"];
-                            } else {
-                                $downvotes = $interaction["icnt"];
+                                $upvotes += 1;
+                            } else if ($interaction['interaction_type'] == 2) {
+                                $downvotes += 1;
                             }
                         }
-                        echo "<div class='bottomspan'>
-            
+                        if (isset($_SESSION['user'])) {
+
+                            echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                        
+                        <p class='post-upvotes'>Upvotes</p>
+                        
+                        <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                        </div>
+                        
+                        <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                            
+                            <p class='post-downvotes'>Downvotes</p>
+                            <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                        </div>";
+                        } else {
+                            echo "<div class='bottomspan'>
+                            
                             <p class='post-upvotes'>Upvotes</p>
                             
                             <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p>
@@ -95,10 +130,11 @@ try {
                             
                             <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p>
                         </div>";
-                        $datetime = strtotime($data['creation_time']);
+                        }
+                        $datetime = strtotime($post['creation_time']);
                         $formatted_date = date('m/d/Y h:i:s A', $datetime);
                         echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";
-                        if ($data['admin_change'] != NULL) {
+                        if ($post['admin_change'] != NULL) {
                             echo "<p><i>This post was modified by an admin</i></p>";
                         }
                         echo "</div>";

@@ -47,6 +47,8 @@ try {
     <title>Post</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/reddit-logo.ico">
+
 </head>
 
 <body>
@@ -100,14 +102,14 @@ try {
                 }
                 if (isset($_SESSION['user'])) {
 
-                    echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1'>
+                    echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=post'>
                     
                 <p class='post-upvotes'>Upvotes</p>
                 
                 <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
                 </div>
                 
-                <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2'>
+                <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=post'>
                     
                     <p class='post-downvotes'>Downvotes</p>
                     <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>

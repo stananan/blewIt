@@ -42,6 +42,8 @@ try {
     <title>Profile</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/reddit-logo.ico">
+
 </head>
 
 <body>

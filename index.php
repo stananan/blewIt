@@ -21,6 +21,8 @@ if (!isset($_SESSION['load-more-index'])) {
     <title>Blew It</title>
 
     <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/x-icon" href="images/reddit-logo.ico">
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 
@@ -32,7 +34,7 @@ if (!isset($_SESSION['load-more-index'])) {
                 $(document).scrollTop($.cookie("scroll"));
             }
 
-            $('.nav, .upload-button').on("click", function() {
+            $('.nav, .upload-button, .bottomspan').on("click", function() {
 
                 $.cookie("scroll", $(document).scrollTop());
 
@@ -44,12 +46,13 @@ if (!isset($_SESSION['load-more-index'])) {
 </head>
 
 <body>
+    <?php
+    require_once "header.php";
+    ?>
     <div class="container">
 
         <!-- HEADER -->
-        <?php
-        require_once "header.php";
-        ?>
+
 
         <!-- USER CREATION TOOLS ||Upload and create sublewits -->
         <?php
@@ -70,7 +73,7 @@ if (!isset($_SESSION['load-more-index'])) {
                 <div class="upload-div">
                     <form action="upload.php" method="post" class="upload-form">
                         <h2>Create a Post</h2>
-                        <textarea name="upload-val" id="upload-text" cols="30" rows="5" placeholder="Text" required style="resize: none;" maxlength="1024"></textarea>
+                        <textarea name="upload-val" id="upload-text" cols="10" rows="5" placeholder="Text" required style="resize: none;" maxlength="1024"></textarea>
                         <!-- We will maybe change the format on how the user chooses a sublewit. Maybe text input or loop through sublewit for select -->
                         <select name="sublewit-val" id="upload-sublewit">
                             <?php
@@ -99,8 +102,8 @@ if (!isset($_SESSION['load-more-index'])) {
                 <div class="sublewit-div">
                     <form action="uploadsublewit.php" method="post" class="upload-form">
                         <h2>Create a Sublewit</h2>
-                        <input type="text" name="sublewit-val" required placeholder="Genre" maxlength="20">
-                        <textarea name="desc-val" id="desc-text" cols="30" rows="5" placeholder="Give a brief description" required style="resize: none;" maxlength="300"></textarea>
+                        <input type="text" id="sublewit-text" name="sublewit-val" required placeholder="Genre" maxlength="20">
+                        <textarea name="desc-val" id="desc-text" cols="10" rows="5" placeholder="Give a brief description" required style="resize: none;" maxlength="300"></textarea>
                         <button class="upload-button" type="submit">Create</button>
                     </form>
                 </div>
@@ -159,8 +162,23 @@ if (!isset($_SESSION['load-more-index'])) {
                             $downvotes += 1;
                         }
                     }
-                    echo "<div class='bottomspan'>
+                    if (isset($_SESSION['user'])) {
+
+                        echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=index'>
+                        
+                    <p class='post-upvotes'>Upvotes</p>
                     
+                    <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                    </div>
+                    
+                    <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=index'>
+                        
+                        <p class='post-downvotes'>Downvotes</p>
+                        <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                    </div>";
+                    } else {
+                        echo "<div class='bottomspan'>
+                        
                         <p class='post-upvotes'>Upvotes</p>
                         
                         <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p>
@@ -171,6 +189,7 @@ if (!isset($_SESSION['load-more-index'])) {
                         
                         <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p>
                     </div>";
+                    }
                     $datetime = strtotime($post['creation_time']);
                     $formatted_date = date('m/d/Y h:i:s A', $datetime);
                     echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";
