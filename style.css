@@ -100,6 +100,10 @@ body {
     padding: 10px;
 }
 
+form[action="search.php"] button[type="submit"] {
+	margin-left: 5px;
+}
+
 .post-upvotes,
 .post-upvotes-total,
 .post-downvotes,
