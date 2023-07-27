@@ -32,6 +32,11 @@
                 echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
 
 
+
+                echo "<div class='nav'><a href='index.php'>Home</a></div>
+
+                <div class='nav'><a href='references.php'>References</a></div>";
+
                 echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
             } catch (PDOException $e) {
 
@@ -45,6 +50,10 @@
 
             <div class="nav"><a href="register.php">Register</a></div>
 
+            <div class='nav'><a href='index.php'>Home</a></div>
+
+            <div class='nav'><a href="references.php">References</a></div>
+
 
 
         <?php
@@ -52,9 +61,7 @@
 
         ?>
 
-        <div class='nav'><a href='index.php'>Home</a></div>
 
-        <div class='nav'><a href="references.php">References</a></div>
     </div>
 
 </div>
