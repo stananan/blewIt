@@ -1,1 +1,0 @@
-DROP TABLE IF EXISTS bi_users, bi_communities, bi_posts, bi_interactions;

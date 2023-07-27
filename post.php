@@ -62,7 +62,6 @@ try {
             try {
 
 
-
                 $authorName = $dbh->prepare("SELECT * FROM `bi_users` WHERE :postAuthorId = `id`;");
                 $authorName->bindValue(':postAuthorId', $post['author_id']);
                 $authorName->execute();
@@ -102,18 +101,53 @@ try {
                 }
                 if (isset($_SESSION['user'])) {
 
-                    echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=post'>
-                    
-                <p class='post-upvotes'>Upvotes</p>
-                
-                <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
-                </div>
-                
-                <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=post'>
-                    
-                    <p class='post-downvotes'>Downvotes</p>
-                    <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
-                </div>";
+                    $userInteractionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id` AND :user = `user_id`;");
+                    $userInteractionTable->bindValue(":user", $_SESSION['user']);
+                    $userInteractionTable->bindValue(":postId", $post['id']);
+                    $userInteractionTable->execute();
+                    $userInteraction = $userInteractionTable->fetch();
+                    if (!empty($userInteraction)) {
+                        if ($userInteraction['interaction_type'] == 1) {
+                            echo "<div class='bottomspan green'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=post'>
+                        
+                            <p class='post-upvotes'>Upvotes</p>
+                            
+                            <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                            </div>
+                            
+                            <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=post'>
+                                
+                                <p class='post-downvotes'>Downvotes</p>
+                                <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                            </div>";
+                        } else if ($userInteraction['interaction_type'] == 2) {
+                            echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=post'>
+                        
+                            <p class='post-upvotes'>Upvotes</p>
+                            
+                            <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                            </div>
+                            
+                            <div class='bottomspan green'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=post'>
+                                
+                                <p class='post-downvotes'>Downvotes</p>
+                                <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                            </div>";
+                        }
+                    } else {
+                        echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=post'>
+                        
+                        <p class='post-upvotes'>Upvotes</p>
+                        
+                        <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                        </div>
+                        
+                        <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=post'>
+                            
+                            <p class='post-downvotes'>Downvotes</p>
+                            <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                        </div>";
+                    }
                 } else {
                     echo "<div class='bottomspan'>
                     
@@ -177,7 +211,7 @@ try {
 
                         <input type="radio" name="sublewit-val" value='<?php echo $post['community_id']; ?>' checked style="display:none;">
                         <input type="radio" name="reply-val" value='<?php echo $post['id']; ?>' checked style="display:none;">
-                        <button type="submit">Comment</button>
+                        <button type="submit" class="nav" style="margin: 0; margin-bottom: 10px;">Comment</button>
 
 
                     </form>
@@ -224,8 +258,58 @@ try {
                             $downvotes += 1;
                         }
                     }
-                    echo "<div class='bottomspan'>
-                    
+                    if (isset($_SESSION['user'])) {
+
+                        $userInteractionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id` AND :user = `user_id`;");
+                        $userInteractionTable->bindValue(":user", $_SESSION['user']);
+                        $userInteractionTable->bindValue(":postId", $comment['id']);
+                        $userInteractionTable->execute();
+                        $userInteraction = $userInteractionTable->fetch();
+                        if (!empty($userInteraction)) {
+                            if ($userInteraction['interaction_type'] == 1) {
+                                echo "<div class='bottomspan green'><a href= 'interaction.php?post=" . htmlspecialchars($comment['id']) . "&inter=1&page=comment&org=" . $_GET['id'] . "'>
+                            
+                                <p class='post-upvotes'>Upvotes</p>
+                                
+                                <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                                </div>
+                                
+                                <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($comment['id']) . "&inter=2&page=comment&org=" . $_GET['id'] . "'>
+                                    
+                                    <p class='post-downvotes'>Downvotes</p>
+                                    <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                                </div>";
+                            } else if ($userInteraction['interaction_type'] == 2) {
+                                echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($comment['id']) . "&inter=1&page=comment&org=" . $_GET['id'] . "'>
+                            
+                                <p class='post-upvotes'>Upvotes</p>
+                                
+                                <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                                </div>
+                                
+                                <div class='bottomspan green'><a href= 'interaction.php?post=" . htmlspecialchars($comment['id']) . "&inter=2&page=comment&org=" . $_GET['id'] . "'>
+                                    
+                                    <p class='post-downvotes'>Downvotes</p>
+                                    <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                                </div>";
+                            }
+                        } else {
+                            echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($comment['id']) . "&inter=1&page=comment&org=" . $_GET['id'] . "'>
+                            
+                            <p class='post-upvotes'>Upvotes</p>
+                            
+                            <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                            </div>
+                            
+                            <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($comment['id']) . "&inter=2&page=comment&org=" . $_GET['id'] . "'>
+                                
+                                <p class='post-downvotes'>Downvotes</p>
+                                <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                            </div>";
+                        }
+                    } else {
+                        echo "<div class='bottomspan'>
+                        
                         <p class='post-upvotes'>Upvotes</p>
                         
                         <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p>
@@ -236,6 +320,7 @@ try {
                         
                         <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p>
                     </div>";
+                    }
                     $datetime = strtotime($comment['creation_time']);
                     $formatted_date = date('m/d/Y h:i:s A', $datetime);
                     echo "<p><i>" . htmlspecialchars($formatted_date) . "</i></p>";

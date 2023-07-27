@@ -17,12 +17,7 @@ try {
     $postTable->execute();
 
     header("Location: admin.php");
-?>
 
-
-    
-
-    <?php
 } catch (PDOException $e) {
 
 
@@ -32,4 +27,3 @@ try {
 
     echo $e;
 }
-    ?>

@@ -2,17 +2,17 @@
 require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
-//Frontend for upddating posts
+//Frontend for upddating sublewit
 if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     header("location: index.php");
 }
 try {
 
-    $postsTableCheck = $dbh->prepare("SELECT `id` from `bi_posts`");
-    $postsTableCheck->execute();
-    $postsCheck = $postsTableCheck->fetchAll();
+    $sublewitTableCheck = $dbh->prepare("SELECT `id` from `bi_communities`");
+    $sublewitTableCheck->execute();
+    $sublewitCheck = $sublewitTableCheck->fetchAll();
     $check = false;
-    foreach ($postsCheck as $id) {
+    foreach ($sublewitCheck as $id) {
 
         if ($id['id'] == $_GET['id']) {
             $check = true;
@@ -22,17 +22,18 @@ try {
         http_response_code(404);
         echo "<h1 style='text-align: center;'>Error 404: Page not found</h1>";
 
-        echo "<h1 style='text-align: center;'>This Post does not exist or it was deleted by a moderator</h1>";
+        echo "<h1 style='text-align: center;'>This Sublewit does not exist or it was deleted by a moderator</h1>";
         exit();
     }
-    $postsTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :getId = `id`;");
-    $postsTable->bindValue(':getId', $_GET['id']);
-    $postsTable->execute();
+    $sublewitTable = $dbh->prepare("SELECT * FROM `bi_communities` WHERE :getId = `id`;");
+    $sublewitTable->bindValue(':getId', $_GET['id']);
+    $sublewitTable->execute();
 
-    $post = $postsTable->fetch();
+    $sublewit = $sublewitTable->fetch();
 } catch (PDOException $e) {
     echo "<p>Error: {$e->getMessage()}</p>";
 }
+
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -43,7 +44,6 @@ try {
     <title>Update</title>
     <link rel="stylesheet" href="style.css">
     <link rel="icon" type="image/x-icon" href="images/reddit-logo.ico">
-
 </head>
 
 <body>
@@ -58,10 +58,12 @@ try {
                 <?php
                 try {
 
-                    echo "<h1>EDIT CONTENT FOR POST #" . htmlspecialchars($_GET["id"]) . "</h1>";
-                    echo "<form action='updatepostconfirm.php?id=" . htmlspecialchars($_GET['id']) . "' method='post'>";
-                    echo "<h2>Content</h2>";
-                    echo "<textarea name='content-val' cols='30' rows='10' required style='resize: none;' maxlength='1024'>" . htmlspecialchars($post['content']) . "</textarea>";
+                    echo "<h1>EDIT SUBLEWIT " . htmlspecialchars($sublewit['name']) . "</h1>";
+                    echo "<form action='updatesublewitconfirm.php?id=" . htmlspecialchars($_GET['id']) . "' method='post'>";
+                    echo "<h2>Title</h2>";
+                    echo "<textarea name='title-val' cols='20' rows='1' required style='resize: none;' maxlength='20'>" . htmlspecialchars($sublewit['name']) . "</textarea>";
+                    echo "<h2>Description</h2>";
+                    echo "<textarea name='content-val' cols='30' rows='10' required style='resize: none;' maxlength='1024'>" . htmlspecialchars($sublewit['description']) . "</textarea>";
                     echo "<button type='submit'>Submit</button>";
                     echo "</form>";
                 } catch (PDOException $e) {

@@ -40,6 +40,8 @@ if (!isset($_SESSION['user']) || !isset($_GET["post"]) || !isset($_GET["inter"])
             header("Location: post.php?id=" . htmlspecialchars($_GET['post']) . "");
         } else if ($_GET['page'] == "sublewit" && isset($_GET['sublewit'])) {
             header("Location: sublewit.php?id=" . $_GET['sublewit'] . "");
+        } else if ($_GET['page'] == "comment" && isset($_GET['org'])) {
+            header("Location: post.php?id=" . $_GET['org'] . "");
         } else {
             header("Location: index.php");
         }

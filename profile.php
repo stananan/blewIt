@@ -52,23 +52,7 @@ try {
         require_once "header.php";
         ?>
 
-        <div class="sidebar">
-            <h3 class="center">Top 10 sublewits</h3>
-            <ol>
-                <?php
-        $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
-        JOIN bi_posts p ON c.id = p.community_id 
-        GROUP BY p.community_id 
-        ORDER BY pcount DESC LIMIT 10;");
-        $sth->execute();
-        $toptensublewits = $sth->fetchAll();
-        foreach ($toptensublewits as $toptensublewit){
-            $toptensublewitid = $toptensublewit['id'];
-            echo "<li><a href = \" sublewit.php?id={$toptensublewitid}\">{$toptensublewit['name']}</a></li>";
-        }
-        ?>
-            </ol>
-        </div>
+
         <!-- Profile Display -->
         <div class="posts-container">
             <div class="post-div">
@@ -80,6 +64,11 @@ try {
                     $user = $userTable->fetch();
 
                     echo "<h1>" . htmlspecialchars($user["username"]) . "</h1>";
+
+                    if ($user['id'] == $_SESSION['user']) {
+                        echo "<h2><a href=deleteuser.php?id=self class='red'>Delete Account</a></h2>";
+                    }
+
                     if ($user["is_admin"] == 0) {
                         echo "<p>Bro is not an admin</p>";
                     } else {
@@ -113,7 +102,7 @@ try {
                     $sublewitTable->execute();
                     $sublewits = $sublewitTable->fetchAll();
                     foreach ($sublewits as $sublewit) {
-                        echo "<p>Bro is the founder of the " . htmlspecialchars($sublewit['name']) . " sublewit</p>";
+                        echo "<p>Bro is the founder of the <a href='sublewit.php?id=" . $sublewit['id'] . "'>" . htmlspecialchars($sublewit['name']) . "  sublewit</a></p>";
                     }
 
 

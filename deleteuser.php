@@ -4,6 +4,50 @@ require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
+if (isset($_SESSION['user']) && isset($_GET["id"]) && $_GET["id"] == "self") {
+    try {
+
+        $postTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE `author_id` = :userid;");
+        $postTable->bindValue(':userid', $_SESSION['user']);
+        $postTable->execute();
+        $posts = $postTable->fetchAll();
+
+
+        foreach ($posts as $post) {
+            $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `post_id` = :postId;");
+            $interactionTable->bindValue(':postId', $post['id']);
+            $interactionTable->execute();
+        }
+
+        $postTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `author_id` = :userid;");
+        $postTable->bindValue(':userid', $_SESSION['user']);
+        $postTable->execute();
+
+        $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `user_id` = :userId;");
+        $interactionTable->bindValue(':userId', $_SESSION['user']);
+        $interactionTable->execute();
+
+
+        $userTable = $dbh->prepare("DELETE FROM `bi_users` WHERE `id` =  :userid;");
+        $userTable->bindValue(':userid', $_SESSION['user']);
+        $userTable->execute();
+
+
+
+        header("Location: logout.php");
+        die();
+    } catch (PDOException $e) {
+
+
+        $errormessage = $e->getMessage();
+        $errorcode = $e->getCode();
+
+
+        echo $errormessage;
+        echo $errorcode;
+    }
+}
+
 if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     header("location: index.php");
 }

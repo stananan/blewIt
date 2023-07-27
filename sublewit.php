@@ -48,9 +48,30 @@ try {
         <?php
         require_once "header.php";
         ?>
+        <div class="sidebar">
+            <h3 class="center">Top 10 sublewits</h3>
+            <ol>
+                <?php
+                $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
+                JOIN bi_posts p ON c.id = p.community_id 
+                GROUP BY p.community_id 
+                ORDER BY pcount DESC LIMIT 10;");
+                $sth->execute();
+                $toptensublewits = $sth->fetchAll();
+                foreach ($toptensublewits as $toptensublewit) {
+                    $toptensublewitid = $toptensublewit['id'];
+                    echo "<li><a href = \" sublewit.php?id={$toptensublewitid}\">{$toptensublewit['name']}</a></li>";
+                }
+                ?>
+            </ol>
+        </div>
         <?php
-        echo "<h1 class='center'>" .  htmlspecialchars($communityname) . "</h1>";
+        echo "<h1 class='center'><u>" .  htmlspecialchars($communityname) . "</u></h1>";
         echo "<h2 class='center'>" . htmlspecialchars($communityinfo) . "</h2>";
+        if ($community['admin_change'] != NULL) {
+            echo "<h4 class='center'>This sublewit has been modified by an admin</h4>";
+        }
+
 
         if ($community['user_id'] != 0) {
             $userTable = $dbh->prepare("SELECT username FROM bi_users WHERE id = :id");
@@ -105,18 +126,53 @@ try {
                         }
                         if (isset($_SESSION['user'])) {
 
-                            echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=sublewit&sublewit=" . $_GET['id'] . "'>
-                        
-                        <p class='post-upvotes'>Upvotes</p>
-                        
-                        <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
-                        </div>
-                        
-                        <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=sublewit&sublewit=" . $_GET['id'] . "'>
-                            
-                            <p class='post-downvotes'>Downvotes</p>
-                            <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
-                        </div>";
+                            $userInteractionTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :postId = `post_id` AND :user = `user_id`;");
+                            $userInteractionTable->bindValue(":user", $_SESSION['user']);
+                            $userInteractionTable->bindValue(":postId", $post['id']);
+                            $userInteractionTable->execute();
+                            $userInteraction = $userInteractionTable->fetch();
+                            if (!empty($userInteraction)) {
+                                if ($userInteraction['interaction_type'] == 1) {
+                                    echo "<div class='bottomspan green'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                                
+                                    <p class='post-upvotes'>Upvotes</p>
+                                    
+                                    <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                                    </div>
+                                    
+                                    <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                                        
+                                        <p class='post-downvotes'>Downvotes</p>
+                                        <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                                    </div>";
+                                } else if ($userInteraction['interaction_type'] == 2) {
+                                    echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                                
+                                    <p class='post-upvotes'>Upvotes</p>
+                                    
+                                    <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                                    </div>
+                                    
+                                    <div class='bottomspan green'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                                        
+                                        <p class='post-downvotes'>Downvotes</p>
+                                        <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                                    </div>";
+                                }
+                            } else {
+                                echo "<div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=1&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                                
+                                <p class='post-upvotes'>Upvotes</p>
+                                
+                                <p class='post-upvotes-total'>" . htmlspecialchars($upvotes) . "</p></a>
+                                </div>
+                                
+                                <div class='bottomspan'><a href= 'interaction.php?post=" . htmlspecialchars($post['id']) . "&inter=2&page=sublewit&sublewit=" . $_GET['id'] . "'>
+                                    
+                                    <p class='post-downvotes'>Downvotes</p>
+                                    <p class='post-downvotes-total'>" . htmlspecialchars($downvotes) . "</p></a>
+                                </div>";
+                            }
                         } else {
                             echo "<div class='bottomspan'>
                             
@@ -140,7 +196,7 @@ try {
                         echo "</div>";
                     }
                 } else {
-                    echo "No posts found";
+                    echo "<p class='center'>No posts found. Make One!</p>";
                 }
             } catch (PDOException $e) {
                 echo "<p>Error: {$e->getMessage()}</p>";

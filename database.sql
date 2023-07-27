@@ -17,6 +17,7 @@ CREATE TABLE bi_communities (
     user_id BIGINT(20) NOT NULL DEFAULT 0,
     name CHAR(30) NOT NULL,
     description VARCHAR(300) NOT NULL,
+    admin_change TINYINT(1),
     
     PRIMARY KEY (id),
     UNIQUE KEY (name)
@@ -47,12 +48,6 @@ CREATE TABLE bi_interactions (
     FOREIGN KEY (user_id) REFERENCES bi_users(id),
     FOREIGN KEY (post_id) REFERENCES bi_posts(id)
 );
-
--- INSERT INTO `bi_users` 
---     (`username`, `password`)
--- VALUES 
---     ('hello', '$2y$10$udY7AW1lEKowEw9kFqeNVOwstPMAFMOc7/NuNoCWSEw7z1Aht23Jq')
--- ;
 
 
 INSERT INTO `bi_communities` (`id`, `name`, `description`)

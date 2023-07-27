@@ -24,28 +24,17 @@
                 if ($_SESSION["admin"] == 1) {
                     echo "<div class='nav'><a href='admin.php'>Admin controls</a></div>";
                 }
+
                 $sth = $dbh->prepare("SELECT * FROM bi_communities");
                 $sth->execute();
                 $communities = $sth->fetchAll();
-                // if (isset($_SESSION['user'])) {
-                //     echo "<div class='nav'>";
-                //     echo "<div class='dropdown'>";
-                //     echo "<button type='button' class='dropbutton'>Communities</button>";
-                //     echo "<div class='dropdowncontent'>";
-                //     foreach ($communities as $community) {
-                //         $id = $community['id'];
-                //         $name = $community['name'];
-                //         echo "<a href = \" sublewit.php?id={$id}\">{$name}</a>";
-                //     }
-                //     echo " </div>";
-                //     echo "</div>";
-                //     echo "</div>";
-                //    
-                //     
-                // }
+
                 echo "<div class='nav'><a href='profile.php?id=" . $_SESSION['user'] . "'>" . $userName['username'] . "</a></div>";
+
+
                 echo "<div class='nav'><a href='logout.php'>Log out</a></div>";
             } catch (PDOException $e) {
+
                 echo "<p>Error: {$e->getMessage()}</p>";
             }
         } else {

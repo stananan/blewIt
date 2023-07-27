@@ -43,8 +43,47 @@ body {
 
 
 .container {
-    margin-top: 10%;
+    margin-top: 8%;
 }
+
+@media (max-width: 1540px) {
+    .container {
+        margin-top: 12%;
+    }
+}
+
+@media (max-width: 1480px) {
+    .container {
+        margin-top: 20%;
+    }
+}
+
+@media (max-width: 1280px) {
+    .container {
+        margin-top: 30%;
+    }
+
+    .sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 1080px) {
+    .container {
+        margin-top: 45%;
+    }
+
+
+}
+
+@media (max-width: 980px) {
+    .container {
+        margin-top: 75%;
+    }
+
+
+}
+
 
 
 
@@ -65,6 +104,8 @@ body {
 .post-downvotes,
 .post-downvotes-total {
     display: inline-block;
+    color: black;
+
 }
 
 
@@ -108,43 +149,11 @@ a {
 
 }
 
-.dropdown {
-    position: relative;
-    display: inline-block;
-}
-
-.dropdowncontent {
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
-    z-index: 1;
-    font-size: 20px;
-}
-
-.dropdowncontent a {
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-}
 
 .center {
     text-align: center;
 }
 
-.dropdowncontent a:hover {
-    background-color: #f1f1f1
-}
-
-.dropdown:hover .dropdowncontent {
-    display: block;
-}
-
-.dropdown:hover .dropbutton {
-    background-color: #3e8e41;
-}
 
 .nav a:visited {
     color: #86BFFA;
@@ -170,10 +179,10 @@ textarea {
     justify-content: center;
     width: fit-content;
     margin: auto;
-    margin-top: 3%;
+    margin-top: 0;
     margin-bottom: 3%;
     max-width: 1300px;
-    padding: 10px;
+    padding: 0;
 
 }
 
@@ -186,12 +195,13 @@ textarea {
 
 }
 
-.sidebar{
-    width:12%;
-    height:fit-content;
+.sidebar {
+    width: 150px;
+    height: fit-content;
     padding: 10px;
-    border:1px solid black;
-    position:fixed;
+    position: fixed;
+    background-color: white;
+
 }
 
 .upload-div,
@@ -202,12 +212,15 @@ textarea {
     width: 100%;
     padding: 25px;
     margin: 10px;
+    margin-top: 0;
 }
 
 
-ol li{
-   padding:10px; 
+ol li {
+    padding: 10px;
+    color: #86BFFA;
 }
+
 #upload-text,
 #desc-text {
     font-size: 150%;
@@ -245,6 +258,14 @@ ol li{
     color: red;
 }
 
-#tableofposts{
-    width:fit-content;
+.admin {
+    width: fit-content;
+}
+
+.green {
+    background-color: lightgreen;
+}
+
+.red {
+    color: red;
 }

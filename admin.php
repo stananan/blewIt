@@ -18,7 +18,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="icon" type="image/x-icon" href="images/reddit-logo.ico">
 
-    <title>Profile</title>
+    <title>Admin</title>
 
     <link rel="stylesheet" href="style.css">
     <style>
@@ -27,7 +27,46 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
             padding: 10px;
             border: 1px solid black;
         }
+
+        .hidden {
+            display: none;
+        }
+
+        #tableofusers,
+        #tableofposts,
+        #tableofsubs {
+            cursor: pointer;
+        }
     </style>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+    <script>
+        $(document).ready(() => {
+
+            $("#tableofusers").click((e) => {
+                if ($("#user-table").hasClass("hidden")) {
+                    $("#user-table").removeClass("hidden");
+                } else {
+                    $("#user-table").addClass("hidden");
+                }
+            })
+            $("#tableofposts").click((e) => {
+                if ($("#post-table").hasClass("hidden")) {
+                    $("#post-table").removeClass("hidden");
+                } else {
+                    $("#post-table").addClass("hidden");
+                }
+            })
+            $("#tableofsubs").click((e) => {
+                if ($("#sublewit-table").hasClass("hidden")) {
+                    $("#sublewit-table").removeClass("hidden");
+                } else {
+                    $("#sublewit-table").addClass("hidden");
+                }
+            })
+        })
+    </script>
 </head>
 
 <body>
@@ -40,9 +79,10 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
 
         <div class="posts-container">
             <!-- User Admin Panel -->
-            <div class="post-div">
+            <div class="post-div admin">
                 <h2>Users</h2>
-                <table>
+                <h2 id="tableofusers">>>></h2>
+                <table id="user-table">
                     <tr>
                         <th>Id</th>
                         <th>Username</th>
@@ -96,9 +136,10 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                 </table>
             </div>
             <!-- Posts Admin Panel -->
-            <div class="post-div" id="tableofposts">
+            <div class="post-div admin">
                 <h2>Posts</h2>
-                <table>
+                <h2 id="tableofposts">>>></h2>
+                <table id="post-table">
                     <tr>
                         <th>Id</th>
                         <th>Content</th>
@@ -108,7 +149,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         <th>Community Id</th>
                         <th>Changed By Admin</th>
                         <th>Delete button</th>
-                        <th>Edit Button</th>
+                        <th>Update button</th>
                     </tr>
                     <?php
                     try {
@@ -133,9 +174,10 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                             $formatted_date = date('m/d/Y h:i:s A', $datetime);
                             echo "<td>" . htmlspecialchars($formatted_date) . "</td>";
 
-                            echo "<td><a href='profile.php?id=" . htmlspecialchars($post['author_id']) . "'>" . htmlspecialchars($post['author_id']) . "</td>";
+                            echo "<td><a href='profile.php?id=" . htmlspecialchars($post['author_id']) . "'>" . htmlspecialchars($post['author_id']) . "</a></td>";
 
-                            echo "<td>" . $post['community_id'] . "</td>";
+                            echo "<td><a href='sublewit.php?id=" . htmlspecialchars($post['community_id']) . "'>" . htmlspecialchars($post['community_id']) . "</a></td>";
+
                             if ($post['admin_change'] != NULL) {
                                 echo "<td>Yes</td>";
                             } else {
@@ -157,15 +199,18 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                 </table>
             </div>
             <!-- Sublewit Admin Panel -->
-            <div class="post-div">
+            <div class="post-div admin">
                 <h2>Sublewits</h2>
-                <table>
+                <h2 id="tableofsubs">>>></h2>
+                <table id="sublewit-table">
                     <tr>
                         <th>Id</th>
                         <th>Name</th>
                         <th>Description</th>
                         <th>Creator Id</th>
+                        <th>Changed By Admin</th>
                         <th>Delete button</th>
+                        <th>Update button</th>
                     </tr>
                     <?php
                     try {
@@ -189,9 +234,16 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                             } else {
                                 echo "<td><a href='profile.php?id=" . htmlspecialchars($sublewit['user_id']) . "'>" . htmlspecialchars($sublewit['user_id']) . "</td>";
                             }
+                            if ($sublewit['admin_change'] != NULL) {
+                                echo "<td>Yes</td>";
+                            } else {
+                                echo "<td>False</td>";
+                            }
 
 
                             echo "<td><a href = \"deletesublewit.php?id={$sublewitId}\">DELETE SUBLEWIT</a></td>";
+
+                            echo "<td><a href = \"updatesublewit.php?id={$sublewitId}\">UPDATE SUBLEWIT</a></td>";
 
                             echo "</tr>";
                         }
