@@ -4,12 +4,15 @@ require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
+//backend validation
+
 if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     header("location: index.php");
 }
 
 try {
 
+    //looping through posts, and then delete all interactions on those posts that are in the sublewit
     $postTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE `community_id` = :communityId;");
     $postTable->bindValue(':communityId', intval($_GET['id']));
     $postTable->execute();
@@ -23,9 +26,13 @@ try {
         $interactionTable->execute();
     }
 
+    //deleting the posts
+
     $postTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `community_id` = :communityId;");
     $postTable->bindValue(':communityId', intval($_GET['id']));
     $postTable->execute();
+
+    //deleting the sublewit
 
     $sublewIt = $dbh->prepare("DELETE FROM `bi_communities` WHERE `id` = :id;");
     $sublewIt->bindValue(':id', intval($_GET['id']));

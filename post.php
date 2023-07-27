@@ -3,11 +3,13 @@ require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
+
 if (!isset(($_GET['id']))) {
     http_response_code(404);
     echo "Error 404: Page not found";
     exit();
 }
+
 //Checking valid GET
 try {
 
@@ -196,6 +198,7 @@ try {
             <div class="post-div">
                 <h3>Comments</h3>
                 <?php
+                // creating comments
                 if (isset($_SESSION["user"])) {
 
                     if (isset($_SESSION["comment-error"])) {
@@ -219,7 +222,7 @@ try {
                 <?php
 
                 }
-
+                //displaying all coments
                 $commentsTable = $dbh->prepare("SELECT * FROM `bi_posts` WHERE :postId = reply_id ORDER BY `creation_time` DESC;");
                 $commentsTable->bindValue(":postId", $post['id']);
                 $commentsTable->execute();

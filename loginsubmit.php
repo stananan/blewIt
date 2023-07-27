@@ -11,7 +11,7 @@ try {
 
         $username = $_POST['username'];
         $userpassword = $_POST['password'];
-
+        // check if the passowrd if valid and matching, then we set the session to the user
         $sth = $dbh->prepare("SELECT * FROM `bi_users` WHERE :username = `username`;");
         $sth->bindValue(':username', $username);
         if ($sth->execute()) {
@@ -23,6 +23,7 @@ try {
             } else {
 
                 if (password_verify($userpassword, $loginUser['password'])) {
+
                     $userTable = $dbh->prepare("UPDATE `bi_users` SET `last_login_time` = NOW() WHERE :username = `username`;");
                     $userTable->bindValue(":username", $username);
                     $userTable->execute();

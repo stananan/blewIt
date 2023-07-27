@@ -2,7 +2,7 @@
 require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
-
+//Check if user is admin
 if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     header("location: index.php");
 }
@@ -42,6 +42,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
     <script>
+        //Jquery code to add css classes to make the page simplier
         $(document).ready(() => {
 
             $("#tableofusers").click((e) => {
@@ -71,6 +72,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
 
 <body>
     <div class="container">
+        <!-- header -->
         <?php
         require_once "header.php";
 
@@ -100,6 +102,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
 
                         $sth->execute();
                         $users = $sth->fetchAll();
+                        //loop through users and echo out user data
                         foreach ($users as $user) {
                             $userid = $user['id'];
                             echo "<tr>";
@@ -156,6 +159,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         $sth = $dbh->prepare("SELECT * FROM bi_posts ORDER BY `creation_time` DESC");
                         $sth->execute();
                         $posts = $sth->fetchAll();
+                        //loop through posts and echo out post data
                         foreach ($posts as $post) {
                             $postid = $post['id'];
                             echo "<tr>";
@@ -217,6 +221,7 @@ if (!isset($_SESSION['user']) || !isset($_SESSION['admin']) || $_SESSION['admin'
                         $sth = $dbh->prepare("SELECT * FROM bi_communities");
                         $sth->execute();
                         $sublewits = $sth->fetchAll();
+                        //loop through sublewits and echo out sublewit data
                         foreach ($sublewits as $sublewit) {
                             $sublewitId = htmlspecialchars($sublewit['id']);
                             echo "<tr>";

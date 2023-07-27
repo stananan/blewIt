@@ -1,4 +1,5 @@
 <!-- Header Code -->
+<!-- ALL PAGES USE HEADER CODE-->
 
 <div class="header-div">
 

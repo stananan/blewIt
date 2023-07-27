@@ -35,6 +35,7 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                 }
 
                 ?>
+                <!-- login form -->
                 <form action=" loginsubmit.php" method="post">
                     <h3>Username:</h3>
                     <?php
@@ -47,8 +48,7 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                     ?>
                     <button type="submit">Login</button>
 
-                    <!-- Add js frontend validation 
-Username should only contain letters, numbers, and underscores.-->
+
                 </form>
             </div>
         </div>

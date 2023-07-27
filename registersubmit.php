@@ -2,6 +2,7 @@
 require 'realconfig.php';
 session_start();
 //Backend for Registering
+// We get a sql error if it didnt go through so we try to insert a new user to the db, if we get a error, show the error in the register page
 try {
     if (isset($_POST["username"]) && isset($_POST["password"])) {
 

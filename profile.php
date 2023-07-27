@@ -65,8 +65,10 @@ try {
 
                     echo "<h1>" . htmlspecialchars($user["username"]) . "</h1>";
 
-                    if ($user['id'] == $_SESSION['user']) {
-                        echo "<h2><a href=deleteuser.php?id=self class='red'>Delete Account</a></h2>";
+                    if (isset($_SESSION['user'])) {
+                        if ($user['id'] == $_SESSION['user']) {
+                            echo "<h2><a href=deleteuser.php?id=self class='red'>Delete Account</a></h2>";
+                        }
                     }
 
                     if ($user["is_admin"] == 0) {

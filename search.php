@@ -33,22 +33,23 @@ if (!isset($_SESSION['user']) || !isset($_GET['search-val']) || empty($_GET['sea
         require_once "header.php";
         ?>
         <div class="sidebar">
-            <h3 class="center">Top 10 sublewits</h3>
+            <h3 class="center">Top Sublewits</h3>
             <ol>
                 <?php
-        $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
+                $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
         JOIN bi_posts p ON c.id = p.community_id 
         GROUP BY p.community_id 
-        ORDER BY pcount DESC LIMIT 10;");
-        $sth->execute();
-        $toptensublewits = $sth->fetchAll();
-        foreach ($toptensublewits as $toptensublewit){
-            $toptensublewitid = $toptensublewit['id'];
-            echo "<li><a href = \" sublewit.php?id={$toptensublewitid}\">{$toptensublewit['name']}</a></li>";
-        }
-        ?>
+        ORDER BY pcount DESC LIMIT 5;");
+                $sth->execute();
+                $toptensublewits = $sth->fetchAll();
+                foreach ($toptensublewits as $toptensublewit) {
+                    $toptensublewitid = $toptensublewit['id'];
+                    echo "<li><a href = \" sublewit.php?id={$toptensublewitid}\">{$toptensublewit['name']}</a></li>";
+                }
+                ?>
             </ol>
         </div>
+        <!-- Displaying search results -->
         <div class="posts-container">
 
             <div class="post-div">

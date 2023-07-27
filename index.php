@@ -53,7 +53,7 @@ if (!isset($_SESSION['load-more-index'])) {
         <?php
         require_once "header.php";
         ?>
-
+        <!-- Side bar -->
         <div class="sidebar">
             <h3 class="center">Top Sublewits</h3>
             <ol>
@@ -61,7 +61,7 @@ if (!isset($_SESSION['load-more-index'])) {
                 $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
                 JOIN bi_posts p ON c.id = p.community_id 
                 GROUP BY p.community_id 
-                ORDER BY pcount DESC LIMIT 10;");
+                ORDER BY pcount DESC LIMIT 5;");
 
                 $sth->execute();
                 $toptensublewits = $sth->fetchAll();
@@ -77,6 +77,8 @@ if (!isset($_SESSION['load-more-index'])) {
 
 
         <!-- USER CREATION TOOLS ||Upload and create sublewits -->
+
+        <!-- error messages -->
         <?php
         if (isset($_SESSION["user"])) {
             if (isset($_SESSION["upload-error"])) {
@@ -101,7 +103,7 @@ if (!isset($_SESSION['load-more-index'])) {
                             <?php
 
                             try {
-
+                                // loop through and add an option for each sublewit
                                 $communitiesTable = $dbh->prepare("SELECT * FROM `bi_communities` ORDER BY `name` ASC;");
                                 $communitiesTable->execute();
 
@@ -135,7 +137,7 @@ if (!isset($_SESSION['load-more-index'])) {
         }
         ?>
 
-
+        <!-- ||||| -->
 
         <!-- POSTS -->
         <div class="posts-container">
@@ -148,6 +150,7 @@ if (!isset($_SESSION['load-more-index'])) {
                 $postsTable->execute();
 
                 $posts = $postsTable->fetchAll();
+                //We loop through post and limit them but the user can load more
 
                 foreach ($posts as $post) {
 

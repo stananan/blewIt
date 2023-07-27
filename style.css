@@ -14,12 +14,13 @@ body {
 .header-div {
 
     overflow: auto;
-    /* position: fixed; */
+
     position: fixed;
     width: 100%;
     background-color: white;
     top: 0;
     right: 0;
+    max-height: 350px;
 
 }
 
@@ -43,48 +44,8 @@ body {
 
 
 .container {
-    margin-top: 8%;
+    margin-top: 10%;
 }
-
-@media (max-width: 1540px) {
-    .container {
-        margin-top: 12%;
-    }
-}
-
-@media (max-width: 1480px) {
-    .container {
-        margin-top: 20%;
-    }
-}
-
-@media (max-width: 1280px) {
-    .container {
-        margin-top: 30%;
-    }
-
-    .sidebar {
-        display: none;
-    }
-}
-
-@media (max-width: 1080px) {
-    .container {
-        margin-top: 45%;
-    }
-
-
-}
-
-@media (max-width: 980px) {
-    .container {
-        margin-top: 75%;
-    }
-
-
-}
-
-
 
 
 .topspan {
@@ -101,7 +62,7 @@ body {
 }
 
 form[action="search.php"] button[type="submit"] {
-	margin-left: 5px;
+    margin-left: 5px;
 }
 
 .post-upvotes,
@@ -147,8 +108,8 @@ a {
     border-radius: 25px;
     margin-top: 25px;
     margin-bottom: 25px;
-    margin-right:15px;
-    margin-left:15px;
+    margin-right: 15px;
+    margin-left: 15px;
     font-size: 20px;
     color: #86BFFA;
 

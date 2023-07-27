@@ -3,9 +3,12 @@ require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 //Frontend for upddating posts
+
+//checking if the user is admin
 if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     header("location: index.php");
 }
+// checking if there is a post
 try {
 
     $postsTableCheck = $dbh->prepare("SELECT `id` from `bi_posts`");
@@ -54,6 +57,7 @@ try {
         require_once "header.php";
         ?>
         <div class="posts-container">
+            <!-- page for updating cotent of post -->
             <div class="post-div">
                 <?php
                 try {

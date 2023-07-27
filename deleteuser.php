@@ -4,6 +4,8 @@ require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
+
+//If the get request is deleting the own user's account, backend validation and delete his account
 if (isset($_SESSION['user']) && isset($_GET["id"]) && $_GET["id"] == "self") {
     try {
 
@@ -48,6 +50,8 @@ if (isset($_SESSION['user']) && isset($_GET["id"]) && $_GET["id"] == "self") {
     }
 }
 
+//backend validation for admin
+
 if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     header("location: index.php");
 }
@@ -65,25 +69,19 @@ try {
         $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `post_id` = :postId;");
         $interactionTable->bindValue(':postId', $post['id']);
         $interactionTable->execute();
-
-        //scratch this idea
-        //deletes all comments from his post
-        // $commentsTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `reply_id` = :postId;");
-        // $commentsTable->bindValue(':postId', $post['id']);
-        // $commentsTable->execute();
-
-
     }
 
+    //delete all posts
     $postTable = $dbh->prepare("DELETE FROM `bi_posts` WHERE `author_id` = :userid;");
     $postTable->bindValue(':userid', intval($_GET['id']));
     $postTable->execute();
 
+    //delete all interactions
     $interactionTable = $dbh->prepare("DELETE FROM `bi_interactions` WHERE `user_id` = :userId;");
     $interactionTable->bindValue(':userId', intval($_GET['id']));
     $interactionTable->execute();
 
-
+    //delete the user
     $userTable = $dbh->prepare("DELETE FROM `bi_users` WHERE `id` =  :userid;");
     $userTable->bindValue(':userid', intval($_GET['id']));
     $userTable->execute();

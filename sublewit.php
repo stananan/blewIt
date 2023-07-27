@@ -18,7 +18,7 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 
 </head>
 <?php
-
+// valid id for sublewit or not
 try {
 
     $sublewitid = $_GET['id'];
@@ -49,13 +49,13 @@ try {
         require_once "header.php";
         ?>
         <div class="sidebar">
-            <h3 class="center">Top 10 sublewits</h3>
+            <h3 class="center">Top Sublewits</h3>
             <ol>
                 <?php
                 $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
                 JOIN bi_posts p ON c.id = p.community_id 
                 GROUP BY p.community_id 
-                ORDER BY pcount DESC LIMIT 10;");
+                ORDER BY pcount DESC LIMIT 5;");
                 $sth->execute();
                 $toptensublewits = $sth->fetchAll();
                 foreach ($toptensublewits as $toptensublewit) {
@@ -66,13 +66,14 @@ try {
             </ol>
         </div>
         <?php
+        //display the sublewit info
         echo "<h1 class='center'><u>" .  htmlspecialchars($communityname) . "</u></h1>";
         echo "<h2 class='center'>" . htmlspecialchars($communityinfo) . "</h2>";
         if ($community['admin_change'] != NULL) {
             echo "<h4 class='center'>This sublewit has been modified by an admin</h4>";
         }
 
-
+        //author of sublewit
         if ($community['user_id'] != 0) {
             $userTable = $dbh->prepare("SELECT username FROM bi_users WHERE id = :id");
             $userTable->bindValue(":id", $community['user_id']);
@@ -82,7 +83,7 @@ try {
             echo "<h2 class='center'><a href='profile.php?id=" . $community['user_id'] . "'>Sublewit created by <i>" . $userName['username'] . "</i></a></h2>";
         }
         ?>
-
+        //display
         <div class="posts-container">
             <?php
             try {

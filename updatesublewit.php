@@ -3,11 +3,13 @@ require "realconfig.php";
 session_start();
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 //Frontend for upddating sublewit
+
+//checking if user is admin
 if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin']) || $_SESSION['admin'] != 1) {
     header("location: index.php");
 }
 try {
-
+    //checking is sublewit is real
     $sublewitTableCheck = $dbh->prepare("SELECT `id` from `bi_communities`");
     $sublewitTableCheck->execute();
     $sublewitCheck = $sublewitTableCheck->fetchAll();
@@ -54,6 +56,8 @@ try {
         require_once "header.php";
         ?>
         <div class="posts-container">
+
+            <!-- form for updating sublewit -->
             <div class="post-div">
                 <?php
                 try {

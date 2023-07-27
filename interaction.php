@@ -3,12 +3,13 @@
 require_once "realconfig.php";
 $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
 session_start();
-
+//validation backend
 if (!isset($_SESSION['user']) || !isset($_GET["post"]) || !isset($_GET["inter"]) || !isset($_GET['page'])) {
     header("location: index.php");
 } else {
 
     try {
+        //we make sure that the user can only have one interaction per post and insert and update.
         $userCheckTable = $dbh->prepare("SELECT * FROM `bi_interactions` WHERE :userId = `user_id` AND :postId = `post_id`;");
         $userCheckTable->bindValue(":userId", $_SESSION['user']);
         $userCheckTable->bindValue(":postId", $_GET['post']);

@@ -34,6 +34,7 @@ $dbh = new PDO(DB_DSN, DB_USER, DB_PASSWORD);
                 }
 
                 ?>
+                <!-- register form -->
                 <form action="registersubmit.php" method="post">
                     <h3>Username:</h3>
                     <?php

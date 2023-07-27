@@ -10,14 +10,13 @@ if (!isset($_SESSION['user']) || !isset($_GET["id"]) || !isset($_SESSION['admin'
 
 try {
 
-
+    //update post
     $postTable = $dbh->prepare("UPDATE `bi_posts` SET `content` = :content, `admin_change` = 1 WHERE `id` = :id");
     $postTable->bindValue(':id', intval($_GET['id']));
     $postTable->bindValue(':content', $_POST['content-val']);
     $postTable->execute();
 
     header("Location: admin.php");
-
 } catch (PDOException $e) {
 
 
