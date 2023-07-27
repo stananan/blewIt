@@ -55,7 +55,7 @@ if (!isset($_SESSION['load-more-index'])) {
         ?>
 
         <div class="sidebar">
-            <h3 class="center">Top 10 sublewits</h3>
+            <h3 class="center">Top Sublewits</h3>
             <ol>
                 <?php
                 $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
