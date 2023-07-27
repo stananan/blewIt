@@ -54,6 +54,7 @@ try {
                 <?php
                 $sth = $dbh->prepare("SELECT c.id, c.name, COUNT(p.id) as pcount FROM `bi_communities` c 
                 JOIN bi_posts p ON c.id = p.community_id 
+                WHERE p.reply_id IS NULL
                 GROUP BY p.community_id 
                 ORDER BY pcount DESC LIMIT 5;");
                 $sth->execute();
